@@ -11,10 +11,94 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Login
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+
+// Registration
+Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+Route::post('register', 'Auth\RegisterController@register');
+
+// home
+Route::get('/', 'HomeController@index')->name('index');
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::prefix('seller')->namespace('Seller')->name('seller.')->group(function () {
+        Route::get('/', 'HomeController@index')->name('index');
+
+        // customer
+        Route::match(['get', 'post'], 'customer',   'CustomerController@index')->name('customer.index');
+        Route::post('customer/add',                 'CustomerController@store')->name('customer.store');
+        Route::resource('customer',                 'CustomerController', ['only' => [
+            'update', 'destroy',
+        ]]);
+
+        // supplier
+        Route::match(['get', 'post'], 'supplier',   'SupplierController@index')->name('supplier.index');
+        Route::post('supplier/add',                 'SupplierController@store')->name('supplier.store');
+        Route::resource('supplier',                 'SupplierController', ['only' => [
+            'update', 'destroy',
+        ]]);
+
+        // product
+        Route::match(['get', 'post'], 'product',   'ProductController@index')->name('product.index');
+        Route::post('product/add',                 'ProductController@store')->name('product.store');
+        Route::resource('product',                 'ProductController', ['only' => [
+            'update', 'destroy',
+        ]]);
+
+        // purchase
+        Route::match(['get', 'post'], 'purchase',   'PurchaseController@index')->name('purchase.index');
+        Route::post('purchase/add',                 'PurchaseController@store')->name('purchase.store');
+        Route::resource('purchase',                 'PurchaseController', ['only' => [
+            'update', 'destroy', 'show'
+        ]]);
+        Route::post('purchase/detail/purchase/{id}',    'PurchaseController@detailPurchase')->name('selling.detail-purchase');
+
+        // selling
+        Route::match(['get', 'post'], 'selling',    'SellingController@index')->name('selling.index');
+        Route::post('selling/add',                  'SellingController@store')->name('selling.store');
+        Route::resource('selling',                  'SellingController', ['only' => [
+            'update', 'destroy', 'show'
+        ]]);
+
+        // Detail Selling
+        Route::post('detail-selling/add',   'DetailSellingController@store')->name('detail-selling.store');
+        Route::resource('detail-selling',   'DetailSellingController', ['only' => [
+            'update', 'destroy', 'show'
+        ]]);
+    });
 });
 
-Auth::routes();
+Route::prefix('admin')->namespace('Admin')->name('admin.')->group(function () {
+    // Login
+    Route::match(['get', 'post'], 'login', 'Auth\LoginController@login')->name('login');
+    Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
-Route::get('/home', 'HomeController@index')->name('home');
+    Route::group(['middleware' => ['auth']], function () {
+        // home
+        Route::get('/', 'HomeController@index')->name('index');
+
+        // category
+        Route::match(['get', 'post'], 'category',   'CategoryController@index')->name('category.index');
+        Route::post('category/add',                 'CategoryController@store')->name('category.store');
+        Route::resource('category',                 'CategoryController', ['only' => [
+            'update', 'destroy',
+        ]]);
+
+        // type
+        Route::match(['get', 'post'], 'type',   'TypeController@index')->name('type.index');
+        Route::post('type/add',                 'TypeController@store')->name('type.store');
+        Route::resource('type',                 'TypeController', ['only' => [
+            'update', 'destroy',
+        ]]);
+
+        // unit
+        Route::match(['get', 'post'], 'unit',   'UnitController@index')->name('unit.index');
+        Route::post('unit/add',                 'UnitController@store')->name('unit.store');
+        Route::resource('unit',                 'UnitController', ['only' => [
+            'update', 'destroy',
+        ]]);
+    });
+});
