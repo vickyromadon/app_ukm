@@ -54,7 +54,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('purchase',                 'PurchaseController', ['only' => [
             'update', 'destroy', 'show'
         ]]);
-        Route::post('purchase/detail/purchase/{id}',    'PurchaseController@detailPurchase')->name('selling.detail-purchase');
+
+        // Detail Purchase
+        Route::post('detail-purchase/add',  'DetailPurchaseController@store')->name('detail-purchase.store');
+        Route::resource('detail-purchase',  'DetailPurchaseController', ['only' => [
+            'destroy'
+        ]]);
+        Route::post('detail-purchase/done', 'DetailPurchaseController@done')->name('detail-purchase.done');
 
         // selling
         Route::match(['get', 'post'], 'selling',    'SellingController@index')->name('selling.index');
@@ -66,8 +72,9 @@ Route::group(['middleware' => ['auth']], function () {
         // Detail Selling
         Route::post('detail-selling/add',   'DetailSellingController@store')->name('detail-selling.store');
         Route::resource('detail-selling',   'DetailSellingController', ['only' => [
-            'update', 'destroy', 'show'
+            'destroy'
         ]]);
+        Route::post('detail-selling/done', 'DetailSellingController@done')->name('detail-selling.done');
     });
 });
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Models\Purchase;
+use App\Models\Product;
 use App\Models\DetailPurchase;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class PurchaseController extends Controller
         ]);
 
         $purchase               = new Purchase();
-        $purchase->number       = "PURCASE/" . Auth::user()->id . "/" . date("Ymd");
+        $purchase->number       = "PURCASE/" . Auth::user()->id . "/" . date("Ymdhis");
         $purchase->supplier_id  = $request->supplier_id;
         $purchase->user_id      = Auth::user()->id;
         $purchase->description  = $request->description;
@@ -133,60 +134,10 @@ class PurchaseController extends Controller
 
     public function show($id)
     {
-        return $this->view(['data' => Purchase::find($id)]);
-    }
-
-    public function detailPurchase(Request $request, $id)
-    {
-        $search;
-        $start = $request->start;
-        $length = $request->length;
-
-        if (!empty($request->search))
-            $search = $request->search['value'];
-        else
-            $search = null;
-
-        $column = [
-            "code",
-            "quantity",
-            "price",
-            "total",
-            "created_at"
-        ];
-
-        $total = DetailPurchase::with(['purchase'])
-            ->where('purchase_id', '=', $id)
-            ->where(function ($q) use ($search) {
-                $q->where("code", 'LIKE', "%$search%")
-                    ->orWhere("quantity", 'LIKE', "%$search%")
-                    ->orWhere("price", 'LIKE', "%$search%")
-                    ->orWhere("total", 'LIKE', "%$search%")
-                    ->orWhere("created_at", 'LIKE', "%$search%");
-            })
-            ->count();
-
-        $data = DetailPurchase::with(['purchase'])
-            ->where('purchase_id', '=', $id)
-            ->where(function ($q) use ($search) {
-                $q->where("code", 'LIKE', "%$search%")
-                    ->orWhere("quantity", 'LIKE', "%$search%")
-                    ->orWhere("price", 'LIKE', "%$search%")
-                    ->orWhere("total", 'LIKE', "%$search%")
-                    ->orWhere("created_at", 'LIKE', "%$search%");
-            })
-            ->orderBy($column[$request->order[0]['column'] - 1], $request->order[0]['dir'])
-            ->skip($start)
-            ->take($length)
-            ->get();
-
-        $response = [
-            'data' => $data,
-            'draw' => intval($request->draw),
-            'recordsTotal' => $total,
-            'recordsFiltered' => $total
-        ];
-
-        return response()->json($response);
+        return $this->view([
+            'data' => Purchase::find($id),
+            'product' => Product::where('user_id', Auth::user()->id)->get(),
+            'detail_purchase' => DetailPurchase::where('purchase_id', $id)->get()
+        ]);
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DetailSelling extends Model
 {
     protected $fillable = [
-        'code', 'quantity', 'price', 'total'
+        'code', 'quantity', 'price', 'total', 'status'
     ];
 
     public function selling()

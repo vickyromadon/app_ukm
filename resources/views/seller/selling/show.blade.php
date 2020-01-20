@@ -47,6 +47,18 @@
                             </h5>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>
+                                <b>Status</b>
+                            </h5>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>
+                                {{ $data->status }}
+                            </h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -173,9 +185,11 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box box-default">
+                @if ($data->status == "pending")
                 <div class="box-header with-border">
                     <button id="btnAdd" class="pull-right btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                 </div>
+                @endif
 
                 <div class="box-body">
                     <div class="table-responsive">
@@ -186,20 +200,53 @@
                                     <th>Jumlah</th>
                                     <th>Harga</th>
                                     <th>Subtotal</th>
+                                    <th>Status</th>
                                     <th>Tanggal di Buat</th>
+                                    @if ($data->status == "pending")
+                                    <th>Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $total = 0;
+                                @endphp
                                 @foreach ($detail_selling as $item)
                                     <tr>
                                         <td>{{ $item->code }}</td>
                                         <td>{{ $item->quantity }}</td>
                                         <td>{{ $item->price }}</td>
                                         <td>{{ $item->total }}</td>
+                                        <td>{{ $item->status }}</td>
                                         <td>{{ $item->created_at }}</td>
+                                        @if ($data->status == "pending")
+                                        <td>
+                                            <a href="#" data-productid="{{ $item->id }}" class="btn btn-xs btn-danger delete-btn"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                        @endif
                                     </tr>
+                                    @php
+                                        $total += $item->total;
+                                    @endphp
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3">
+                                        <h3>Total</h3>
+                                    </td>
+                                    <td colspan="4">
+                                        <h3>Rp. {{ number_format($total) }}</h3>
+                                    </td>
+                                </tr>
+                                @if ($data->status == "pending")
+                                <tr>
+                                    <td colspan="7">
+                                        <a href="#" id="btnDone" class="btn btn-success pull-right"><i class="fa fa-check"></i> Selesai</a>
+                                    </td>
+                                </tr>
+                                @endif
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -252,6 +299,35 @@
                         </button>
                         <button type="submit" class="btn btn-primary" data-loading-text="<i class='fa fa-spinner fa-spin'></i>">
                             Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- done --}}
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalDone">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="#" method="post" id="formDone">
+                    <input type="hidden" name="selling_id" id="selling_id" value="{{ $data->id }}">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Selesai Penjualan</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p id="del-success">Anda yakin ingin menyelesaikan penjualan ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            Tidak
+                        </button>
+                        <button type="submit" class="btn btn-primary" data-loading-text="<i class='fa fa-spinner fa-spin'></i>">
+                            Ya
                         </button>
                     </div>
                 </form>
@@ -399,6 +475,117 @@
                             });
                         }
                         $('#formAdd button[type=submit]').button('reset');
+                    }
+                });
+            });
+
+            // done
+            $('#btnDone').click(function () {
+                url = '{{ route("seller.detail-selling.done") }}';
+
+                $('#modalDone').modal('show');
+            });
+
+            $('#formDone').submit(function (event) {
+                event.preventDefault();
+                $('#formDone div.form-group').removeClass('has-error');
+                $('#formDone .help-block').empty();
+                $('#formDone button[type=submit]').button('loading');
+
+                var formData = new FormData($("#formDone")[0]);
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    processData : false,
+                    contentType : false,
+                    cache: false,
+
+                    success: function (response) {
+                        if (response.success) {
+                            $.toast({
+                                heading: 'Success',
+                                text : response.message,
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'success',
+                                loader : false
+                            });
+
+                            setTimeout(function () {
+    	                        location.reload();
+    	                    }, 2000);
+                        } else {
+                            $.toast({
+                                heading: 'Error',
+                                text : response.message,
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'error',
+                                loader : false
+                            });
+                        }
+
+                        $('#formDone button[type=submit]').button('reset');
+                    },
+
+                    error: function(response){
+                        if (response.status === 422) {
+                            // form validation errors fired up
+                            var error = response.responseJSON.errors;
+                            var data = $('#formDone').serializeArray();
+                            $.each(data, function(key, value){
+                                if( error[data[key].name] != undefined ){
+                                    console.log(data[key].name);
+                                    var elem;
+                                    if( $("#formDone input[name='" + data[key].name + "']").length )
+                                        elem = $("#formDone input[name='" + data[key].name + "']");
+                                    else if( $("#formDone select[name='" + data[key].name + "']").length )
+                                        elem = $("#formDone select[name='" + data[key].name + "']");
+                                    else
+                                        elem = $("#formDone textarea[name='" + data[key].name + "']");
+
+                                    elem.parent().find('.help-block').text(error[data[key].name]);
+                                    elem.parent().find('.help-block').show();
+                                    elem.parent().find('.help-block').css("color", "red");
+                                    elem.parent().parent().addClass('has-error');
+                                }
+                            });
+                            if(error['image'] != undefined){
+                                $("#formDone input[name='image']").parent().find('.help-block').text(error['image']);
+                                $("#formDone input[name='image']").parent().find('.help-block').show();
+                                $("#formDone input[name='image']").parent().find('.help-block').css("color", "red");
+                                $("#formDone input[name='image']").parent().parent().addClass('has-error');
+                            }
+                        }
+                        else if (response.status === 400) {
+                            $.toast({
+                                heading: 'Error',
+                                text : response.responseJSON.message,
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'error',
+                                loader : false,
+                                hideAfter: 5000
+                            });
+                        }
+                        else {
+                            $.toast({
+                                heading: 'Error',
+                                text : "Whoops, looks like something went wrong.",
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'error',
+                                loader : false,
+                                hideAfter: 5000
+                            });
+                        }
+                        $('#formDone button[type=submit]').button('reset');
                     }
                 });
             });

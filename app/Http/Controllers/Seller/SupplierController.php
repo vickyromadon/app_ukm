@@ -90,7 +90,7 @@ class SupplierController extends Controller
         $location->save();
 
         $supplier               = new Supplier();
-        $supplier->code         = "SPL" . date('Ymd');
+        $supplier->code         = "SPL" . date('Ymdhis');
         $supplier->name         = $request->name;
         $supplier->email        = $request->email;
         $supplier->phone        = $request->phone;

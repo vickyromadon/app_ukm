@@ -90,7 +90,7 @@ class CustomerController extends Controller
         $location->save();
 
         $customer               = new Customer();
-        $customer->code         = "CS" . date('Ymd');
+        $customer->code         = "CS" . date('Ymdhis');
         $customer->name         = $request->name;
         $customer->email        = $request->email;
         $customer->phone        = $request->phone;

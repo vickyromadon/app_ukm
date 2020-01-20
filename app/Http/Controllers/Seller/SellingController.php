@@ -73,7 +73,7 @@ class SellingController extends Controller
         ]);
 
         $selling               = new Selling();
-        $selling->number       = "SELLING/" . Auth::user()->id . "/" . date("Ymd");
+        $selling->number       = "SELLING/" . Auth::user()->id . "/" . date("Ymdhis");
         $selling->customer_id  = $request->customer_id;
         $selling->user_id      = Auth::user()->id;
         $selling->description  = $request->description;

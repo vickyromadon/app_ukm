@@ -61,7 +61,7 @@
                                     <span class="help-block"></span>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label class="col-sm-3 control-label">Harga</label>
 
                                 <div class="col-sm-9">
@@ -76,7 +76,7 @@
                                     <input type="number" id="stock" name="stock" class="form-control" placeholder="Masukkan Tersedia">
                                     <span class="help-block"></span>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Minimal Tersedia</label>
 
@@ -353,8 +353,8 @@
 
                 $('#id').val(aData.id);
                 $('#name').val(aData.name);
-                $('#stock').val(aData.stock);
-                $('#price').val(aData.price);
+                // $('#stock').val(aData.stock);
+                // $('#price').val(aData.price);
                 $('#minimum_stock').val(aData.minimum_stock);
                 $('#description').val(aData.description);
                 $('#unit_id').val(aData.unit_id);

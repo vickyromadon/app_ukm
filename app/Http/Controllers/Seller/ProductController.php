@@ -79,8 +79,8 @@ class ProductController extends Controller
         $validator = $request->validate([
             'name'          => 'required|string|max:20',
             'description'   => 'required|string',
-            'price'         => 'required|numeric',
-            'stock'         => 'required|numeric',
+            // 'price'         => 'required|numeric',
+            // 'stock'         => 'required|numeric',
             'minimum_stock' => 'required|numeric',
             'image'         => 'required|mimes:jpeg,jpg,png|max:5000',
             'unit_id'       => 'required',
@@ -89,11 +89,11 @@ class ProductController extends Controller
         ]);
 
         $product                = new Product();
-        $product->code          = "PR" . date("Ymd");
+        $product->code          = "PR" . date("Ymdhis");
         $product->name          = $request->name;
         $product->description   = $request->description;
-        $product->price         = $request->price;
-        $product->stock         = $request->stock;
+        $product->price         = 0;
+        $product->stock         = 0;
         $product->minimum_stock = $request->minimum_stock;
         $product->unit_id       = $request->unit_id;
         $product->type_id       = $request->type_id;
@@ -128,8 +128,8 @@ class ProductController extends Controller
         $validator = $request->validate([
             'name'          => 'required|string|max:20',
             'description'   => 'required|string',
-            'price'         => 'required|numeric',
-            'stock'         => 'required|numeric',
+            // 'price'         => 'required|numeric',
+            // 'stock'         => 'required|numeric',
             'minimum_stock' => 'required|numeric',
             'image'         => 'nullable|mimes:jpeg,jpg,png|max:5000',
             'unit_id'       => 'required',
@@ -140,8 +140,8 @@ class ProductController extends Controller
         $product                = Product::find($request->id);
         $product->name          = $request->name;
         $product->description   = $request->description;
-        $product->price         = $request->price;
-        $product->stock         = $request->stock;
+        $product->price         = 0;
+        $product->stock         = 0;
         $product->minimum_stock = $request->minimum_stock;
         $product->unit_id       = $request->unit_id;
         $product->type_id       = $request->type_id;
