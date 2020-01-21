@@ -75,6 +75,20 @@ Route::group(['middleware' => ['auth']], function () {
             'destroy'
         ]]);
         Route::post('detail-selling/done', 'DetailSellingController@done')->name('detail-selling.done');
+
+        // availability
+        Route::match(['get', 'post'], 'availability',   'AvailabilityController@index')->name('availability.index');
+        Route::post('availability/add',                 'AvailabilityController@store')->name('availability.store');
+        Route::resource('availability',                 'AvailabilityController', ['only' => [
+            'update', 'destroy', 'show'
+        ]]);
+
+        // Detail availability
+        Route::post('detail-availability/add',   'DetailAvailabilityController@store')->name('detail-availability.store');
+        Route::resource('detail-availability',   'DetailAvailabilityController', ['only' => [
+            'destroy'
+        ]]);
+        Route::post('detail-availability/done', 'DetailAvailabilityController@done')->name('detail-availability.done');
     });
 });
 

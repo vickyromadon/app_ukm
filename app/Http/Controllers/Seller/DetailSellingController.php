@@ -28,9 +28,6 @@ class DetailSellingController extends Controller
             ]);
         }
 
-        // $product->stock -= $request->quantity;
-        // $product->save();
-
         $detailSelling              = new DetailSelling();
         $detailSelling->code        = "DTL/SELLING/" . Auth::user()->id . "/" . date("Ymdhis");
         $detailSelling->product_id  = $request->product_id;

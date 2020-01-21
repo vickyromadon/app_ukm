@@ -123,6 +123,11 @@
                             <i class="fa fa-list"></i> <span>Penjualan</span>
                         </a>
                     </li>
+                    <li class="{{(Request::segment(2) == 'availability') ? "active" : ""}}">
+                        <a href="{{ route('seller.availability.index') }}">
+                            <i class="fa fa-list"></i> <span>Penyesuaian</span>
+                        </a>
+                    </li>
                 </ul>
                 <!-- /.sidebar-menu -->
             </section>

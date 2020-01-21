@@ -197,6 +197,7 @@
                             <thead>
                                 <tr>
                                     <th>Kode</th>
+                                    <th>Produk</th>
                                     <th>Jumlah</th>
                                     <th>Harga</th>
                                     <th>Subtotal</th>
@@ -214,6 +215,7 @@
                                 @foreach ($detail_selling as $item)
                                     <tr>
                                         <td>{{ $item->code }}</td>
+                                        <td>{{ $item->product->name }}</td>
                                         <td>{{ $item->quantity }}</td>
                                         <td>{{ $item->price }}</td>
                                         <td>{{ $item->total }}</td>
@@ -232,7 +234,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="3">
+                                    <td colspan="4">
                                         <h3>Total</h3>
                                     </td>
                                     <td colspan="4">
@@ -241,7 +243,7 @@
                                 </tr>
                                 @if ($data->status == "pending")
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="8">
                                         <a href="#" id="btnDone" class="btn btn-success pull-right"><i class="fa fa-check"></i> Selesai</a>
                                     </td>
                                 </tr>

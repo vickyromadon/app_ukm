@@ -3,11 +3,11 @@
 @section('header')
 	<section class="content-header">
 		<h1>
-            Detail Pembelian
+            Detail Penyesuaian
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="#"><i class="fa fa-dashboard"></i> Penjual</a></li>
-			<li>Pembelian</li>
+			<li>Penyesuaian</li>
 			<li class="active">Detail</li>
 		</ol>
 	</section>
@@ -19,161 +19,43 @@
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        Detail Pembelian
+                        Detail Penyesuaian
                     </h3>
                 </div>
                 <div class="box-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <h5>
                                 <b>Nomor</b>
                             </h5>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <h5>
                                 {{ $data->number }}
                             </h5>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <h5>
                                 <b>Deskripsi</b>
                             </h5>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <h5>
                                 {{ $data->description }}
                             </h5>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <h5>
                                 <b>Status</b>
                             </h5>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <h5>
                                 {{ $data->status }}
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        Detail Pemasok
-                    </h3>
-                </div>
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>
-                                <b>Kode</b>
-                            </h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>
-                                {{ $data->supplier->code }}
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>
-                                <b>Nama</b>
-                            </h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>
-                                {{ $data->supplier->name }}
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>
-                                <b>Email</b>
-                            </h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>
-                                {{ $data->supplier->email }}
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>
-                                <b>No. Hp</b>
-                            </h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>
-                                {{ $data->supplier->phone }}
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        Detail Alamat Pemasok
-                    </h3>
-                </div>
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>
-                                <b>Alamat</b>
-                            </h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>
-                                {{ $data->supplier->location->address }}
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>
-                                <b>Kecamatan</b>
-                            </h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>
-                                {{ $data->supplier->location->sub_district }}
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>
-                                <b>Kabupaten</b>
-                            </h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>
-                                {{ $data->supplier->location->district }}
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>
-                                <b>Provinsi</b>
-                            </h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>
-                                {{ $data->supplier->location->province }}
                             </h5>
                         </div>
                     </div>
@@ -199,8 +81,6 @@
                                     <th>Kode</th>
                                     <th>Produk</th>
                                     <th>Jumlah</th>
-                                    <th>Harga</th>
-                                    <th>Subtotal</th>
                                     <th>Status</th>
                                     <th>Tanggal di Buat</th>
                                     @if ($data->status == "pending")
@@ -209,16 +89,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $total = 0;
-                                @endphp
-                                @foreach ($detail_purchase as $item)
+                                @foreach ($detail_availability as $item)
                                     <tr>
                                         <td>{{ $item->code }}</td>
                                         <td>{{ $item->product->name }}</td>
                                         <td>{{ $item->quantity }}</td>
-                                        <td>{{ $item->price }}</td>
-                                        <td>{{ $item->total }}</td>
                                         <td>{{ $item->status }}</td>
                                         <td>{{ $item->created_at }}</td>
                                         @if ($data->status == "pending")
@@ -227,21 +102,9 @@
                                         </td>
                                         @endif
                                     </tr>
-
-                                    @php
-                                        $total += $item->total;
-                                    @endphp
                                 @endforeach
                             </tbody>
                             <tfoot>
-                                <tr>
-                                    <td colspan="4">
-                                        <h3>Total</h3>
-                                    </td>
-                                    <td colspan="4">
-                                        <h3>Rp. {{ number_format($total) }}</h3>
-                                    </td>
-                                </tr>
                                 @if ($data->status == "pending")
                                 <tr>
                                     <td colspan="8">
@@ -272,7 +135,7 @@
                     <div class="modal-body">
                         <div class="form-horizontal">
                             <input type="hidden" id="id" name="id">
-                            <input type="hidden" id="purchase_id" name="purchase_id" value="{{ $data->id }}">
+                            <input type="hidden" id="availability_id" name="availability_id" value="{{ $data->id }}">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Produk</label>
 
@@ -291,14 +154,6 @@
 
                                 <div class="col-sm-9">
                                     <input type="number" id="quantity" name="quantity" class="form-control" placeholder="Masukkan Kuantitas">
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Harga</label>
-
-                                <div class="col-sm-9">
-                                    <input type="number" id="price" name="price" class="form-control" placeholder="Masukkan Harga">
                                     <span class="help-block"></span>
                                 </div>
                             </div>
@@ -321,7 +176,7 @@
     <div class="modal fade" tabindex="-1" role="dialog" id="modalDelete">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('seller.detail-purchase.destroy', ['id' => '#']) }}" method="post" id="formDelete">
+                <form action="{{ route('seller.detail-availability.destroy', ['id' => '#']) }}" method="post" id="formDelete">
                     {{ method_field('DELETE') }}
                     <div class="modal-header">
                         <h4 class="modal-title">Hapus Produk</h4>
@@ -351,16 +206,16 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="#" method="post" id="formDone">
-                    <input type="hidden" name="purchase_id" id="purchase_id" value="{{ $data->id }}">
+                    <input type="hidden" name="availability_id" id="availability_id" value="{{ $data->id }}">
                     <div class="modal-header">
-                        <h4 class="modal-title">Selesai Pembelian</h4>
+                        <h4 class="modal-title">Selesai Penyesuaian</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
 
                     <div class="modal-body">
-                        <p id="del-success">Anda yakin ingin menyelesaikan pembelian ?</p>
+                        <p id="del-success">Anda yakin ingin menyelesaikan Penyesuaian ?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
@@ -398,7 +253,7 @@
                 $('#formAdd button[type=submit]').button('reset');
 
                 $('#formAdd input[name="_method"]').remove();
-                url = '{{ route("seller.detail-purchase.store") }}';
+                url = '{{ route("seller.detail-availability.store") }}';
 
                 $('#modalAdd').modal('show');
             });
@@ -590,7 +445,7 @@
 
             // done
             $('#btnDone').click(function () {
-                url = '{{ route("seller.detail-purchase.done") }}';
+                url = '{{ route("seller.detail-availability.done") }}';
 
                 $('#modalDone').modal('show');
             });
@@ -701,3 +556,5 @@
         });
     </script>
 @endsection
+
+

@@ -2,41 +2,38 @@
 
 namespace App\Http\Controllers\Seller;
 
-use App\Models\DetailPurchase;
+use App\Models\DetailAvailability;
 use App\Models\Product;
-use App\Models\Purchase;
+use App\Models\Availability;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class DetailPurchaseController extends Controller
+class DetailAvailabilityController extends Controller
 {
     public function store(Request $request)
     {
         $validator = $request->validate([
-            'purchase_id'   => 'required|numeric',
+            'availability_id'   => 'required|numeric',
             'product_id'    => 'required|numeric',
             'quantity'      => 'required|numeric',
-            'price'         => 'required|numeric',
         ]);
 
-        $checkDetailPurchase = DetailPurchase::where('purchase_id', $request->purchase_id)->where('product_id', $request->product_id)->where('status', 'pending')->first();
-        if ($checkDetailPurchase != null) {
+        $checkDetailAvailability = DetailAvailability::where('availability_id', $request->availability_id)->where('product_id', $request->product_id)->where('status', 'pending')->first();
+        if ($checkDetailAvailability != null) {
             return response()->json([
                 'success'   => false,
                 'message'   => 'Gagal Menambahkan, Produk Sudah Terdaftar'
             ]);
         }
 
-        $detailPurchase              = new DetailPurchase();
-        $detailPurchase->code        = "DTL/PURCHASE/" . Auth::user()->id . "/" . date("Ymdhis");
-        $detailPurchase->product_id  = $request->product_id;
-        $detailPurchase->purchase_id = $request->purchase_id;
-        $detailPurchase->quantity    = $request->quantity;
-        $detailPurchase->price       = $request->price;
-        $detailPurchase->total       = $request->price * $request->quantity;
+        $detailAvailability                     = new DetailAvailability();
+        $detailAvailability->code               = "DTL/AVAILABILITY/" . Auth::user()->id . "/" . date("Ymdhis");
+        $detailAvailability->product_id         = $request->product_id;
+        $detailAvailability->availability_id    = $request->availability_id;
+        $detailAvailability->quantity           = $request->quantity;
 
-        if (!$detailPurchase->save()) {
+        if (!$detailAvailability->save()) {
             return response()->json([
                 'success'   => false,
                 'message'   => 'Gagal Menambahkan'
@@ -51,9 +48,9 @@ class DetailPurchaseController extends Controller
 
     public function destroy($id)
     {
-        $detailPurchase = DetailPurchase::find($id);
+        $detailAvailability = DetailAvailability::find($id);
 
-        if ($detailPurchase->delete()) {
+        if ($detailAvailability->delete()) {
             return response()->json([
                 'success'   => true,
                 'message'   => 'Berhasil Menghapus'
@@ -68,21 +65,20 @@ class DetailPurchaseController extends Controller
 
     public function done(Request $request)
     {
-        $purchase = Purchase::find($request->purchase_id);
-        $detailPurchase = DetailPurchase::where('purchase_id', $request->purchase_id)->get();
+        $availability = Availability::find($request->availability_id);
+        $detailAvailability = DetailAvailability::where('availability_id', $request->availability_id)->get();
 
-        foreach ($detailPurchase as $item) {
+        foreach ($detailAvailability as $item) {
             $item->status = "done";
             $item->save();
 
             $product = Product::find($item->product_id);
             $product->stock += $item->quantity;
-            $product->price = $item->price;
             $product->save();
         }
 
-        $purchase->status = 'done';
-        $purchase->save();
+        $availability->status = 'done';
+        $availability->save();
 
         return response()->json([
             'success'   => true,
