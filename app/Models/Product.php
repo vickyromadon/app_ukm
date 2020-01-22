@@ -30,4 +30,9 @@ class Product extends Model
     {
         return $this->hashMany('App\Models\DetailPurchase');
     }
+
+    public function carts()
+    {
+        return $this->hashMany('App\Models\Cart');
+    }
 }

@@ -58,4 +58,29 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Availability');
     }
+
+    public function banks()
+    {
+        return $this->hasMany('App\Models\Bank');
+    }
+
+    public function seller()
+    {
+        return $this->hasOne('App\Models\Seller');
+    }
+
+    public function carts()
+    {
+        return $this->hashMany('App\Models\Cart');
+    }
+
+    public function invoices()
+    {
+        return $this->hashMany('App\Models\Invoice');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany('App\Models\Payment');
+    }
 }

@@ -76,6 +76,13 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        if (Auth::user()->seller->bank == null) {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Harap Isi Akun Bank Terlebih Dahulu.'
+            ]);
+        }
+
         $validator = $request->validate([
             'name'          => 'required|string|max:20',
             'description'   => 'required|string',

@@ -35,18 +35,23 @@
                     <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                         <ul class="nav navbar-nav">
                             <li class="{{(Request::segment(1) == '/' || Request::segment(1) == '') ? "active" : ""}}">
-                                <a href="/">
+                                <a href="{{ route('index') }}">
                                     <i class="fa fa-home"></i>
-                                    Home
                                 </a>
                             </li>
+                            <li class="{{ Request::segment(1) == 'about' ? "active" : "" }}">
+                                <a href="{{ route('about') }}">
+                                    Tentang
+                                </a>
+                            </li>
+                            @if (Auth::user())
+                                <li class="{{ Request::segment(1) == 'invoice' ? "active" : "" }}">
+                                    <a href="{{ route('invoice.index') }}">
+                                        Transaksi
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
-                        <form class="navbar-form navbar-left" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="navbar-search-input"
-                                    placeholder="Pencarian">
-                            </div>
-                        </form>
                     </div>
 
                     @if( !Auth::user() )
@@ -58,6 +63,15 @@
                     @else
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
+                            <li class="dropdown notifications-menu">
+                                <!-- Menu toggle button -->
+                                <a href="{{ route('cart.index') }}">
+                                    <i class="fa fa-cart-plus"></i>
+                                    <span class="label label-success">
+                                        {{ \App\Models\Cart::where('user_id', '=', Auth::user()->id)->where('status', '=', 'pending')->count() }}
+                                    </span>
+                                </a>
+                            </li>
 
                             <!-- User Account Menu -->
                             <li class="dropdown user user-menu">

@@ -63,7 +63,11 @@ class LoginController extends Controller
 
         if (Auth::guard('web')->attempt($credential, $request->member)) {
             if (Auth::user()->roles[0]->name != 'member') {
-                return redirect()->intended(route('seller.index'));
+                if ( Auth::user()->seller != null && Auth::user()->seller->status == "approve") {
+                    return redirect()->intended(route('seller.index'));
+                } else {
+                    return redirect()->intended(route('seller.seller.index'));
+                }
             } else {
                 return redirect()->intended(route('index'));
             }

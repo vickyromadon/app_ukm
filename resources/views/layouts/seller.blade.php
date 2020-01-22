@@ -93,41 +93,53 @@
 
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="{{(Request::segment(2) == '') ? "active" : ""}}">
-                        <a href="{{ route('seller.index') }}">
-                            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="{{(Request::segment(2) == 'customer') ? "active" : ""}}">
-                        <a href="{{ route('seller.customer.index') }}">
-                            <i class="fa fa-list"></i> <span>Pelanggan</span>
-                        </a>
-                    </li>
-                    <li class="{{(Request::segment(2) == 'supplier') ? "active" : ""}}">
-                        <a href="{{ route('seller.supplier.index') }}">
-                            <i class="fa fa-list"></i> <span>Pemasok</span>
-                        </a>
-                    </li>
-                    <li class="{{(Request::segment(2) == 'product') ? "active" : ""}}">
-                        <a href="{{ route('seller.product.index') }}">
-                            <i class="fa fa-list"></i> <span>Produk</span>
-                        </a>
-                    </li>
-                    <li class="{{(Request::segment(2) == 'purchase') ? "active" : ""}}">
-                        <a href="{{ route('seller.purchase.index') }}">
-                            <i class="fa fa-list"></i> <span>Pembelian</span>
-                        </a>
-                    </li>
-                    <li class="{{(Request::segment(2) == 'selling') ? "active" : ""}}">
-                        <a href="{{ route('seller.selling.index') }}">
-                            <i class="fa fa-list"></i> <span>Penjualan</span>
-                        </a>
-                    </li>
-                    <li class="{{(Request::segment(2) == 'availability') ? "active" : ""}}">
-                        <a href="{{ route('seller.availability.index') }}">
-                            <i class="fa fa-list"></i> <span>Penyesuaian</span>
-                        </a>
-                    </li>
+                    @if ( Auth::user()->seller != null && Auth::user()->seller->status == "approve")
+                        <li class="{{(Request::segment(2) == '') ? "active" : ""}}">
+                            <a href="{{ route('seller.index') }}">
+                                <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="{{(Request::segment(2) == 'bank') ? "active" : ""}}">
+                            <a href="{{ route('seller.bank.index') }}">
+                                <i class="fa fa-list"></i> <span>Bank</span>
+                            </a>
+                        </li>
+                        <li class="{{(Request::segment(2) == 'customer') ? "active" : ""}}">
+                            <a href="{{ route('seller.customer.index') }}">
+                                <i class="fa fa-list"></i> <span>Pelanggan</span>
+                            </a>
+                        </li>
+                        <li class="{{(Request::segment(2) == 'supplier') ? "active" : ""}}">
+                            <a href="{{ route('seller.supplier.index') }}">
+                                <i class="fa fa-list"></i> <span>Pemasok</span>
+                            </a>
+                        </li>
+                        <li class="{{(Request::segment(2) == 'product') ? "active" : ""}}">
+                            <a href="{{ route('seller.product.index') }}">
+                                <i class="fa fa-list"></i> <span>Produk</span>
+                            </a>
+                        </li>
+                        <li class="{{(Request::segment(2) == 'purchase') ? "active" : ""}}">
+                            <a href="{{ route('seller.purchase.index') }}">
+                                <i class="fa fa-list"></i> <span>Pembelian</span>
+                            </a>
+                        </li>
+                        <li class="{{(Request::segment(2) == 'selling') ? "active" : ""}}">
+                            <a href="{{ route('seller.selling.index') }}">
+                                <i class="fa fa-list"></i> <span>Penjualan</span>
+                            </a>
+                        </li>
+                        <li class="{{(Request::segment(2) == 'selling-online') ? "active" : ""}}">
+                            <a href="{{ route('seller.selling-online.index') }}">
+                                <i class="fa fa-list"></i> <span>Penjualan Online</span>
+                            </a>
+                        </li>
+                        <li class="{{(Request::segment(2) == 'availability') ? "active" : ""}}">
+                            <a href="{{ route('seller.availability.index') }}">
+                                <i class="fa fa-list"></i> <span>Penyesuaian</span>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
                 <!-- /.sidebar-menu -->
             </section>

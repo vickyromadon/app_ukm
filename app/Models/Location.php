@@ -19,4 +19,9 @@ class Location extends Model
     {
         return $this->hasMany('App\Models\Supplier');
     }
+
+    public function seller()
+    {
+        return $this->hasOne('App\Models\Seller');
+    }
 }

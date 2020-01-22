@@ -21,11 +21,46 @@ Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('re
 Route::post('register', 'Auth\RegisterController@register');
 
 // home
-Route::get('/', 'HomeController@index')->name('index');
+Route::get('/',                     'HomeController@index')->name('index');
+Route::get('about',                 'HomeController@about')->name('about');
+Route::get('product/detail/{id}',   'ProductController@show')->name('product.show');
+
+Route::group(['middleware' => ['auth']], function () {
+    // cart
+    Route::match(['get', 'post'], 'cart',   'CartController@index')->name('cart.index');
+    Route::post('cart/add',                 'CartController@store')->name('cart.store');
+    Route::resource('cart',                 'CartController', ['only' => [
+        'update', 'destroy'
+    ]]);
+
+    // invoice
+    Route::get('invoice',                                   'InvoiceController@index')->name('invoice.index');
+    Route::post('invoice/add',                              'InvoiceController@store')->name('invoice.store');
+
+    Route::get('invoice/pending/{id}',                      'InvoiceController@pending')->name('invoice.pending');
+    Route::get('invoice/page-payment/{id}',                 'InvoiceController@pagePayment')->name('invoice.page-payment');
+    Route::get('invoice/canceled/{id}',                     'InvoiceController@canceled')->name('invoice.canceled');
+    Route::get('invoice/approve/{id}',                      'InvoiceController@approve')->name('invoice.approve');
+    Route::get('invoice/reject/{id}',                       'InvoiceController@reject')->name('invoice.reject');
+
+    Route::post('invoice/payment',                          'InvoiceController@payment')->name('invoice.payment');
+    Route::post('invoice/cancel',                           'InvoiceController@cancel')->name('invoice.cancel');
+
+});
 
 Route::group(['middleware' => ['auth']], function () {
     Route::prefix('seller')->namespace('Seller')->name('seller.')->group(function () {
         Route::get('/', 'HomeController@index')->name('index');
+
+        // seller
+        Route::match(['get', 'post'], 'seller',   'SellerController@index')->name('seller.index');
+
+        // bank
+        Route::match(['get', 'post'], 'bank',   'BankController@index')->name('bank.index');
+        Route::post('bank/add',                 'BankController@store')->name('bank.store');
+        Route::resource('bank',                 'BankController', ['only' => [
+            'update',
+        ]]);
 
         // customer
         Route::match(['get', 'post'], 'customer',   'CustomerController@index')->name('customer.index');
@@ -89,6 +124,14 @@ Route::group(['middleware' => ['auth']], function () {
             'destroy'
         ]]);
         Route::post('detail-availability/done', 'DetailAvailabilityController@done')->name('detail-availability.done');
+
+        // selling-online
+        Route::match(['get', 'post'], 'selling-online',    'SellingOnlineController@index')->name('selling-online.index');
+        Route::resource('selling-online',                  'SellingOnlineController', ['only' => [
+            'show'
+        ]]);
+        Route::post('selling-online/approve',               'SellingOnlineController@approve')->name('selling-online.approve');
+        Route::post('selling-online/reject',                'SellingOnlineController@reject')->name('selling-online.reject');
     });
 });
 
@@ -121,5 +164,16 @@ Route::prefix('admin')->namespace('Admin')->name('admin.')->group(function () {
         Route::resource('unit',                 'UnitController', ['only' => [
             'update', 'destroy',
         ]]);
+
+        // management-seller
+        Route::match(['get', 'post'], 'management-seller',   'ManagementSellerController@index')->name('management-seller.index');
+        Route::resource('management-seller',                 'ManagementSellerController', ['only' => [
+            'show',
+        ]]);
+        Route::post('management-seller/approve',               'ManagementSellerController@approve')->name('management-seller.approve');
+        Route::post('management-seller/reject',                'ManagementSellerController@reject')->name('management-seller.reject');
+
+        // management-member
+        Route::match(['get', 'post'], 'management-member',   'ManagementMemberController@index')->name('management-member.index');
     });
 });

@@ -112,6 +112,16 @@
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                         </a>
                     </li>
+                    <li class="{{(Request::segment(2) == 'management-seller') ? "active" : ""}}">
+                        <a href="{{ route('admin.management-seller.index') }}">
+                            <i class="fa fa-list"></i> <span>Pengelola Penjual</span>
+                        </a>
+                    </li>
+                    <li class="{{(Request::segment(2) == 'management-member') ? "active" : ""}}">
+                        <a href="{{ route('admin.management-member.index') }}">
+                            <i class="fa fa-list"></i> <span>Pengelola Pembeli</span>
+                        </a>
+                    </li>
                     <li class="{{(Request::segment(2) == 'category') ? "active" : ""}}">
                         <a href="{{ route('admin.category.index') }}">
                             <i class="fa fa-list"></i> <span>Kategori</span>
