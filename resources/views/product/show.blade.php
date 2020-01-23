@@ -14,7 +14,7 @@
             <br>
             <div class="row">
                 <div class="col-md-12">
-                    <h2 style="margin:0px; padding:0px;">Rp. {{ number_format($product->price) }}</h2>
+                    <h2 style="margin:0px; padding:0px;">Rp. {{ number_format($product->selling_price) }}</h2>
                 </div>
             </div>
             <br>

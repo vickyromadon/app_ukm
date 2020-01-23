@@ -26,6 +26,7 @@
                             <th>No</th>
                             <th>Nomor Penyesuaian</th>
                             <th>Deskripsi</th>
+                            <th>Tanggal</th>
                             <th>Tanggal di Buat</th>
                             <th>Aksi</th>
                         </tr>
@@ -55,6 +56,14 @@
 
                                 <div class="col-sm-9">
                                     <textarea name="description" id="description" class="form-control" placeholder="Masukkan Deskripsi"></textarea>
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Tanggal</label>
+
+                                <div class="col-sm-9">
+                                    <input type="date" name="date" id="date" class="form-control" placeholder="Masukkan Tanggal">
                                     <span class="help-block"></span>
                                 </div>
                             </div>
@@ -138,6 +147,10 @@
                         "orderable": false,
                     },
                     {
+                        "data": "date",
+                        "orderable": true,
+                    },
+                    {
                         "data": "created_at",
                         "orderable": true,
                     },
@@ -151,7 +164,7 @@
                         "orderable": false,
                     }
                 ],
-                "order": [ 3, 'desc' ],
+                "order": [ 4, 'desc' ],
                 "fnCreatedRow" : function(nRow, aData, iDataIndex) {
                     $(nRow).attr('data', JSON.stringify(aData));
                 }
@@ -185,6 +198,7 @@
 
                 $('#id').val(aData.id);
                 $('#description').val(aData.description);
+                $('#date').val(aData.date);
 
                 $('#modalAdd').modal('show');
             });

@@ -26,12 +26,14 @@ class AvailabilityController extends Controller
             $column = [
                 "number",
                 "description",
+                "date",
                 "created_at"
             ];
 
             $total = Availability::where('user_id', '=', Auth::user()->id)
                 ->where(function ($q) use ($search) {
                     $q->where("number", 'LIKE', "%$search%")
+                        ->orWhere("date", 'LIKE', "%$search%")
                         ->orWhere("created_at", 'LIKE', "%$search%");
                 })
                 ->count();
@@ -39,6 +41,7 @@ class AvailabilityController extends Controller
             $data = Availability::where('user_id', '=', Auth::user()->id)
                 ->where(function ($q) use ($search) {
                     $q->where("number", 'LIKE', "%$search%")
+                        ->orWhere("date", 'LIKE', "%$search%")
                         ->orWhere("created_at", 'LIKE', "%$search%");
                 })
                 ->orderBy($column[$request->order[0]['column'] - 1], $request->order[0]['dir'])
@@ -63,12 +66,14 @@ class AvailabilityController extends Controller
     {
         $validator = $request->validate([
             'description' => 'required|string',
+            'date' => 'required|date',
         ]);
 
         $availability               = new Availability();
         $availability->number       = "AVAILABILITY/" . Auth::user()->id . "/" . date("Ymdhis");
         $availability->user_id      = Auth::user()->id;
         $availability->description  = $request->description;
+        $availability->date  = $request->date;
 
         if (!$availability->save()) {
             return response()->json([
@@ -87,10 +92,12 @@ class AvailabilityController extends Controller
     {
         $validator = $request->validate([
             'description' => 'required|string',
+            'date' => 'required|date',
         ]);
 
         $availability               = Availability::find($request->id);
         $availability->description  = $request->description;
+        $availability->date  = $request->date;
 
         if (!$availability->save()) {
             return response()->json([

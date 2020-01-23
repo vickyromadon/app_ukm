@@ -26,7 +26,8 @@
                             <th>No</th>
                             <th>Kode</th>
                             <th>Nama</th>
-                            <th>Harga</th>
+                            <th>Harga Pokok</th>
+                            <th>Harga Jual</th>
                             <th>Tersedia</th>
                             <th>Status</th>
                             <th>Tanggal di Buat</th>
@@ -58,6 +59,14 @@
 
                                 <div class="col-sm-9">
                                     <input type="text" id="name" name="name" class="form-control" placeholder="Masukkan Nama">
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Harga Jual</label>
+
+                                <div class="col-sm-9">
+                                    <input type="number" id="selling_price" name="selling_price" class="form-control" placeholder="Masukkan Harga Jual">
                                     <span class="help-block"></span>
                                 </div>
                             </div>
@@ -222,9 +231,14 @@
                             <td id="minimum_stock"></td>
                         </tr>
                         <tr>
-                            <th>Harga</th>
+                            <th>Harga Pokok</th>
                             <td>:</td>
                             <td id="price"></td>
+                        </tr>
+                        <tr>
+                            <th>Harga Jual</th>
+                            <td>:</td>
+                            <td id="selling_price"></td>
                         </tr>
                         <tr>
                             <th>Satuan</th>
@@ -296,6 +310,10 @@
                         "orderable": true,
                     },
                     {
+                        "data": "selling_price",
+                        "orderable": true,
+                    },
+                    {
                         "data": "stock",
                         "orderable": true,
                     },
@@ -317,7 +335,7 @@
                         "orderable": false,
                     }
                 ],
-                "order": [ 6, 'desc' ],
+                "order": [ 7, 'desc' ],
                 "fnCreatedRow" : function(nRow, aData, iDataIndex) {
                     $(nRow).attr('data', JSON.stringify(aData));
                 }
@@ -355,6 +373,7 @@
                 $('#name').val(aData.name);
                 // $('#stock').val(aData.stock);
                 // $('#price').val(aData.price);
+                $('#selling_price').val(aData.selling_price);
                 $('#minimum_stock').val(aData.minimum_stock);
                 $('#description').val(aData.description);
                 $('#unit_id').val(aData.unit_id);

@@ -50,6 +50,18 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h5>
+                                <b>Tanggal</b>
+                            </h5>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>
+                                {{ $data->date }}
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>
                                 <b>Status</b>
                             </h5>
                         </div>
@@ -290,6 +302,14 @@
 
                                 <div class="col-sm-9">
                                     <input type="number" id="quantity" name="quantity" class="form-control" placeholder="Masukkan Kuantitas">
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Harga</label>
+
+                                <div class="col-sm-9">
+                                    <input type="number" id="price" name="price" class="form-control" placeholder="Masukkan Harga">
                                     <span class="help-block"></span>
                                 </div>
                             </div>

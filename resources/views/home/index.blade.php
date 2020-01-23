@@ -34,7 +34,7 @@
                             </div>
                             <div class="col-md-8">
                                 <h4>
-                                    Rp. {{ number_format($item->price) }}
+                                    Rp. {{ number_format($item->selling_price) }}
                                 </h4>
                             </div>
                         </div>

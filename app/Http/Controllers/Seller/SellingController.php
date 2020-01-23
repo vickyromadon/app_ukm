@@ -28,6 +28,7 @@ class SellingController extends Controller
                 "customer",
                 "number",
                 "description",
+                "date",
                 "created_at"
             ];
 
@@ -35,6 +36,7 @@ class SellingController extends Controller
                 ->where('user_id', '=', Auth::user()->id)
                 ->where(function ($q) use ($search) {
                     $q->where("number", 'LIKE', "%$search%")
+                        ->orWhere("date", 'LIKE', "%$search%")
                         ->orWhere("created_at", 'LIKE', "%$search%");
                 })
                 ->count();
@@ -43,6 +45,7 @@ class SellingController extends Controller
                 ->where('user_id', '=', Auth::user()->id)
                 ->where(function ($q) use ($search) {
                     $q->where("number", 'LIKE', "%$search%")
+                        ->orWhere("date", 'LIKE', "%$search%")
                         ->orWhere("created_at", 'LIKE', "%$search%");
                 })
                 ->orderBy($column[$request->order[0]['column'] - 1], $request->order[0]['dir'])
@@ -70,6 +73,7 @@ class SellingController extends Controller
         $validator = $request->validate([
             'customer_id' => 'required|numeric',
             'description' => 'required|string',
+            'date' => 'required|date',
         ]);
 
         $selling               = new Selling();
@@ -77,6 +81,7 @@ class SellingController extends Controller
         $selling->customer_id  = $request->customer_id;
         $selling->user_id      = Auth::user()->id;
         $selling->description  = $request->description;
+        $selling->date  = $request->date;
 
         if (!$selling->save()) {
             return response()->json([
@@ -96,11 +101,13 @@ class SellingController extends Controller
         $validator = $request->validate([
             'customer_id' => 'required|numeric',
             'description' => 'required|string',
+            'date' => 'required|date',
         ]);
 
         $selling               = Selling::find($request->id);
         $selling->customer_id  = $request->customer_id;
         $selling->description  = $request->description;
+        $selling->date  = $request->date;
 
         if (!$selling->save()) {
             return response()->json([

@@ -28,6 +28,7 @@ class PurchaseController extends Controller
                 "supplier",
                 "number",
                 "description",
+                "date",
                 "created_at"
             ];
 
@@ -35,6 +36,7 @@ class PurchaseController extends Controller
                 ->where('user_id', '=', Auth::user()->id)
                 ->where(function ($q) use ($search) {
                     $q->where("number", 'LIKE', "%$search%")
+                        ->orWhere("date", 'LIKE', "%$search%")
                         ->orWhere("created_at", 'LIKE', "%$search%");
                 })
                 ->count();
@@ -43,6 +45,7 @@ class PurchaseController extends Controller
                 ->where('user_id', '=', Auth::user()->id)
                 ->where(function ($q) use ($search) {
                     $q->where("number", 'LIKE', "%$search%")
+                        ->orWhere("date", 'LIKE', "%$search%")
                         ->orWhere("created_at", 'LIKE', "%$search%");
                 })
                 ->orderBy($column[$request->order[0]['column'] - 1], $request->order[0]['dir'])
@@ -70,6 +73,7 @@ class PurchaseController extends Controller
         $validator = $request->validate([
             'supplier_id' => 'required|numeric',
             'description' => 'required|string',
+            'date' => 'required|date',
         ]);
 
         $purchase               = new Purchase();
@@ -77,6 +81,7 @@ class PurchaseController extends Controller
         $purchase->supplier_id  = $request->supplier_id;
         $purchase->user_id      = Auth::user()->id;
         $purchase->description  = $request->description;
+        $purchase->date  = $request->date;
 
         if (!$purchase->save()) {
             return response()->json([
@@ -96,11 +101,13 @@ class PurchaseController extends Controller
         $validator = $request->validate([
             'supplier_id' => 'required|numeric',
             'description' => 'required|string',
+            'date' => 'required|date',
         ]);
 
         $purchase               = Purchase::find($request->id);
         $purchase->supplier_id  = $request->supplier_id;
         $purchase->description  = $request->description;
+        $purchase->date  = $request->date;
 
         if (!$purchase->save()) {
             return response()->json([

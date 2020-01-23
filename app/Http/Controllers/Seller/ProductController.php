@@ -28,6 +28,7 @@ class ProductController extends Controller
                 "code",
                 "name",
                 "price",
+                "selling_price",
                 "stock",
                 "status",
                 "created_at"
@@ -39,6 +40,7 @@ class ProductController extends Controller
                     $q->where("code", 'LIKE', "%$search%")
                         ->orWhere("name", 'LIKE', "%$search%")
                         ->orWhere("price", 'LIKE', "%$search%")
+                        ->orWhere("selling_price", 'LIKE', "%$search%")
                         ->orWhere("stock", 'LIKE', "%$search%")
                         ->orWhere("status", 'LIKE', "%$search%");
                 })
@@ -50,6 +52,7 @@ class ProductController extends Controller
                     $q->where("code", 'LIKE', "%$search%")
                         ->orWhere("name", 'LIKE', "%$search%")
                         ->orWhere("price", 'LIKE', "%$search%")
+                        ->orWhere("selling_price", 'LIKE', "%$search%")
                         ->orWhere("stock", 'LIKE', "%$search%")
                         ->orWhere("status", 'LIKE', "%$search%");
                 })
@@ -86,6 +89,7 @@ class ProductController extends Controller
         $validator = $request->validate([
             'name'          => 'required|string|max:20',
             'description'   => 'required|string',
+            'selling_price' => 'required|numeric',
             // 'price'         => 'required|numeric',
             // 'stock'         => 'required|numeric',
             'minimum_stock' => 'required|numeric',
@@ -99,6 +103,7 @@ class ProductController extends Controller
         $product->code          = "PR" . date("Ymdhis");
         $product->name          = $request->name;
         $product->description   = $request->description;
+        $product->selling_price = $request->selling_price;
         $product->price         = 0;
         $product->stock         = 0;
         $product->minimum_stock = $request->minimum_stock;
@@ -135,6 +140,7 @@ class ProductController extends Controller
         $validator = $request->validate([
             'name'          => 'required|string|max:20',
             'description'   => 'required|string',
+            'selling_price' => 'required|numeric',
             // 'price'         => 'required|numeric',
             // 'stock'         => 'required|numeric',
             'minimum_stock' => 'required|numeric',
@@ -147,8 +153,7 @@ class ProductController extends Controller
         $product                = Product::find($request->id);
         $product->name          = $request->name;
         $product->description   = $request->description;
-        $product->price         = 0;
-        $product->stock         = 0;
+        $product->selling_price = $request->selling_price;
         $product->minimum_stock = $request->minimum_stock;
         $product->unit_id       = $request->unit_id;
         $product->type_id       = $request->type_id;

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Availability extends Model
 {
     protected $fillable = [
-        'number', 'description', 'status'
+        'number', 'description', 'status', 'date'
     ];
 
     public function user()

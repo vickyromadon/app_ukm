@@ -33,8 +33,8 @@ class DetailSellingController extends Controller
         $detailSelling->product_id  = $request->product_id;
         $detailSelling->selling_id  = $request->selling_id;
         $detailSelling->quantity    = $request->quantity;
-        $detailSelling->price       = $product->price;
-        $detailSelling->total       = $product->price * $request->quantity;
+        $detailSelling->price       = $request->price;
+        $detailSelling->total       = $request->price * $request->quantity;
 
         if (!$detailSelling->save()) {
             return response()->json([

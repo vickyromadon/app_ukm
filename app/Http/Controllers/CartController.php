@@ -44,7 +44,7 @@ class CartController extends Controller
         $cart->seller_id    = $product->user->seller->id;
         $cart->user_id      = Auth::user()->id;
         $cart->quantity     = $request->quantity;
-        $cart->price        = $product->price * $request->quantity;
+        $cart->price        = $product->selling_price * $request->quantity;
 
         if ($cart->save()) {
             return response()->json([
@@ -93,7 +93,7 @@ class CartController extends Controller
         }
 
         $cart->quantity = $request->quantity;
-        $cart->price    = $product->price * $request->quantity;
+        $cart->price    = $product->selling_price * $request->quantity;
 
         if (!$cart->save()) {
             return response()->json([

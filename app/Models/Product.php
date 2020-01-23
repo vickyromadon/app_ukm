@@ -8,7 +8,8 @@ class Product extends Model
 {
     protected $fillable = [
         'code', 'name', 'price', 'stock',
-        'minimum_stock', 'description', 'status', 'image',
+        'minimum_stock', 'description',
+        'status', 'image', 'selling_price'
     ];
 
     public function user()
