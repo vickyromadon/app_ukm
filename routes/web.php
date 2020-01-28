@@ -23,6 +23,7 @@ Route::post('register', 'Auth\RegisterController@register');
 // home
 Route::get('/',                     'HomeController@index')->name('index');
 Route::get('about',                 'HomeController@about')->name('about');
+Route::get('product',               'ProductController@index')->name('product.index');
 Route::get('product/detail/{id}',   'ProductController@show')->name('product.show');
 
 Route::group(['middleware' => ['auth']], function () {

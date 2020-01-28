@@ -39,6 +39,11 @@
                                     <i class="fa fa-home"></i>
                                 </a>
                             </li>
+                            <li class="{{ Request::segment(1) == 'product' ? "active" : "" }}">
+                                <a href="{{ route('product.index') }}">
+                                    Produk
+                                </a>
+                            </li>
                             <li class="{{ Request::segment(1) == 'about' ? "active" : "" }}">
                                 <a href="{{ route('about') }}">
                                     Tentang
