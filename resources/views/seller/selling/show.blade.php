@@ -221,9 +221,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $total = 0;
-                                @endphp
                                 @foreach ($detail_selling as $item)
                                     <tr>
                                         <td>{{ $item->code }}</td>
@@ -239,20 +236,9 @@
                                         </td>
                                         @endif
                                     </tr>
-                                    @php
-                                        $total += $item->total;
-                                    @endphp
                                 @endforeach
                             </tbody>
                             <tfoot>
-                                <tr>
-                                    <td colspan="4">
-                                        <h3>Total</h3>
-                                    </td>
-                                    <td colspan="4">
-                                        <h3>Rp. {{ number_format($total) }}</h3>
-                                    </td>
-                                </tr>
                                 @if ($data->status == "pending")
                                 <tr>
                                     <td colspan="8">
@@ -343,6 +329,35 @@
 
                     <div class="modal-body">
                         <p id="del-success">Anda yakin ingin menyelesaikan penjualan ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            Tidak
+                        </button>
+                        <button type="submit" class="btn btn-primary" data-loading-text="<i class='fa fa-spinner fa-spin'></i>">
+                            Ya
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- delete -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalDelete">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('seller.detail-selling.destroy', ['id' => '#']) }}" method="post" id="formDelete">
+                    {{ method_field('DELETE') }}
+                    <div class="modal-header">
+                        <h4 class="modal-title">Hapus Produk</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p id="del-success">Anda yakin ingin menghapus Produk ?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
@@ -608,6 +623,85 @@
                             });
                         }
                         $('#formDone button[type=submit]').button('reset');
+                    }
+                });
+            });
+
+            // Delete
+            $('#data_table').on('click', '.delete-btn' , function(e){
+                url =  $('#formDelete').attr('action').replace('#', $(this).data('productid'));
+                $('#modalDelete').modal('show');
+            });
+
+            $('#formDelete').submit(function (event) {
+                event.preventDefault();
+
+                $('#modalDelete button[type=submit]').button('loading');
+                var _data = $("#formDelete").serialize();
+
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: _data,
+                    dataType: 'json',
+                    cache: false,
+
+                    success: function (response) {
+                        if (response.success) {
+                            $.toast({
+                                heading: 'Success',
+                                text : response.message,
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'success',
+                                loader : false
+                            });
+
+                            setTimeout(function () {
+    	                        location.reload();
+    	                    }, 2000);
+                        } else {
+                            $.toast({
+                                heading: 'Error',
+                                text : response.message,
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'error',
+                                loader : false
+                            });
+                        }
+                        $('#modalDelete button[type=submit]').button('reset');
+                        $('#formDelete')[0].reset();
+                    },
+                    error: function(response){
+                        if (response.status === 400 || response.status === 422) {
+                            // Bad Client Request
+                            $.toast({
+                                heading: 'Error',
+                                text : response.responseJSON.message,
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'error',
+                                loader : false,
+                                hideAfter: 5000
+                            });
+                        } else {
+                            $.toast({
+                                heading: 'Error',
+                                text : "Whoops, looks like something went wrong.",
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'error',
+                                loader : false,
+                                hideAfter: 5000
+                            });
+                        }
+
+                        $('#formDelete button[type=submit]').button('reset');
                     }
                 });
             });

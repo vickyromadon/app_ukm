@@ -156,9 +156,13 @@
                     },
                     {
                         render : function(data, type, row){
-                            return  '<a href="{{ route('seller.assembly.index') }}/'+ row.id +'" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></a> &nbsp' +
+                            if (row.status == "pending") {
+                                return  '<a href="{{ route('seller.assembly.index') }}/'+ row.id +'" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></a> &nbsp' +
                                     '<a href="#" class="edit-btn btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a> &nbsp' +
                                 	'<a href="#" class="delete-btn btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>';
+                            } else {
+                                return  '<a href="{{ route('seller.assembly.index') }}/'+ row.id +'" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></a>';
+                            }
                         },
                         "width": "10%",
                         "orderable": false,

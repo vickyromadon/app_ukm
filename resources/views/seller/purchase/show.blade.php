@@ -221,9 +221,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $total = 0;
-                                @endphp
                                 @foreach ($detail_purchase as $item)
                                     <tr>
                                         <td>{{ $item->code }}</td>
@@ -239,21 +236,9 @@
                                         </td>
                                         @endif
                                     </tr>
-
-                                    @php
-                                        $total += $item->total;
-                                    @endphp
                                 @endforeach
                             </tbody>
                             <tfoot>
-                                <tr>
-                                    <td colspan="4">
-                                        <h3>Total</h3>
-                                    </td>
-                                    <td colspan="4">
-                                        <h3>Rp. {{ number_format($total) }}</h3>
-                                    </td>
-                                </tr>
                                 @if ($data->status == "pending")
                                 <tr>
                                     <td colspan="8">

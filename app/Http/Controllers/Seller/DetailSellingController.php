@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Models\DetailSelling;
+use App\Models\ReportStock;
 use App\Models\Product;
 use App\Models\Selling;
 use App\Models\ReportSelling;
@@ -18,6 +19,7 @@ class DetailSellingController extends Controller
             'selling_id'    => 'required|numeric',
             'product_id'    => 'required|numeric',
             'quantity'      => 'required|numeric',
+            'price'      => 'required|numeric',
         ]);
 
         $checkDetailSelling = DetailSelling::where('selling_id', $request->selling_id)->where('product_id', $request->product_id)->where('status', 'pending')->first();
@@ -67,8 +69,6 @@ class DetailSellingController extends Controller
             $item->save();
 
             $product = Product::find($item->product_id);
-            $product->stock -= $item->quantity;
-            $product->save();
 
             $reportSelling                  = new ReportSelling();
             $reportSelling->number          = $selling->number;
@@ -79,6 +79,25 @@ class DetailSellingController extends Controller
             $reportSelling->user_id         = Auth::user()->id;
             $reportSelling->customer_name   = $selling->customer->name;
             $reportSelling->save();
+
+            $reportStock                        = new ReportStock();
+            $reportStock->type                  = "selling offline";
+            $reportStock->transaction_number    = $selling->number;
+            $reportStock->quantity_initial      = $product->stock;
+            $reportStock->price_initial         = $product->price;
+            $reportStock->quantity_in           = 0;
+            $reportStock->cogs_in               = 0;
+            $reportStock->quantity_out          = $item->quantity;
+            $reportStock->cogs_out              = $item->total;
+            $reportStock->quantity_avg          = $product->stock - $item->quantity;
+            $reportStock->cogs_avg              = $this->getCogsAvg($product->price, $product->stock, $item->price, $item->quantity);
+            $reportStock->product_id            = $product->id;
+            $reportStock->user_id               = Auth::user()->id;
+            $reportStock->save();
+
+            $product->stock -= $item->quantity;
+            $product->price = $item->price;
+            $product->save();
         }
 
         $selling->status = 'done';
@@ -88,5 +107,28 @@ class DetailSellingController extends Controller
             'success'   => true,
             'message'   => 'Berhasil Menyelesaikan'
         ]);
+    }
+
+    public function destroy($id)
+    {
+        $detailSelling = DetailSelling::find($id);
+
+        if ($detailSelling->delete()) {
+            return response()->json([
+                'success'   => true,
+                'message'   => 'Berhasil Menghapus'
+            ]);
+        } else {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Gagal Menghapus'
+            ]);
+        }
+    }
+
+    private function getCogsAvg($price_initial, $quantity_initial, $price, $quantity)
+    {
+        $cogs = (($price_initial * $quantity_initial) + ($price * $quantity)) / ($quantity_initial + $quantity);
+        return $cogs;
     }
 }

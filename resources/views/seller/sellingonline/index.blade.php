@@ -32,23 +32,25 @@
                     </thead>
                     <tbody>
                         @foreach ($data as $item)
-                            <tr>
-                                <td>{{ $item->number }}</td>
-                                <td>{{ $item->user->name }}</td>
-                                <td>
-                                    @if ($item->status == 'payment')
-                                        pending
-                                    @else
-                                        {{ $item->status }}
-                                    @endif
-                                </td>
-                                <td>{{ $item->created_at }}</td>
-                                <td>
-                                    <a href="{{ route('seller.selling-online.index') }}/{{ $item->id }}" class="btn btn-info btn-xs">
-                                        <i class="fa fa-eye"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            @if ($item->status != "pending" && $item->status != "cancel")
+                                <tr>
+                                    <td>{{ $item->number }}</td>
+                                    <td>{{ $item->user->name }}</td>
+                                    <td>
+                                        @if ($item->status == 'payment')
+                                            pending
+                                        @else
+                                            {{ $item->status }}
+                                        @endif
+                                    </td>
+                                    <td>{{ $item->created_at }}</td>
+                                    <td>
+                                        <a href="{{ route('seller.selling-online.index') }}/{{ $item->id }}" class="btn btn-info btn-xs">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>

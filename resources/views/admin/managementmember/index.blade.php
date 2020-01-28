@@ -26,7 +26,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($data as $item)
-                                    @if ($item->roles[0]->name != "administrator" && $item->roles[0]->name != "seller")
+                                    @if ($item->roles[0]->name == "member")
                                         <tr>
                                             <td>{{ $item->name }}</td>
                                             <td>{{ $item->email }}</td>

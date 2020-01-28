@@ -27,21 +27,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $item)
-                                    @if ($item->roles[0]->name != "administrator" && $item->roles[0]->name != "member")
-                                        <tr>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{ $item->email }}</td>
-                                            <td>{{ $item->created_at }}</td>
-                                            <td>{{ $item->seller->status }}</td>
-                                            <td>
-                                                <a href="{{ route('admin.management-seller.index') }}/{{ $item->id }}" class="btn btn-xs btn-info">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                @endforeach
+                                @if (count($data) > 0)
+                                    @foreach ($data as $item)
+                                        @if ($item->roles[0]->name == "seller")
+                                            <tr>
+                                                <td>{{ $item->name }}</td>
+                                                <td>{{ $item->email }}</td>
+                                                <td>{{ $item->created_at }}</td>
+                                                <td>{{ $item->seller != null ? $item->seller->status : "-" }}</td>
+                                                <td>
+                                                    @if ($item->seller != null)
+                                                        <a href="{{ route('admin.management-seller.index') }}/{{ $item->id }}" class="btn btn-xs btn-info">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>

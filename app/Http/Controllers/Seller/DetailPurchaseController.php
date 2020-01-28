@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Seller;
 
 use App\Models\DetailPurchase;
 use App\Models\ReportPurchase;
+use App\Models\ReportStock;
 use App\Models\Product;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
@@ -77,9 +78,6 @@ class DetailPurchaseController extends Controller
             $item->save();
 
             $product = Product::find($item->product_id);
-            $product->stock += $item->quantity;
-            $product->price = $item->price;
-            $product->save();
 
             $reportPurchase                 = new ReportPurchase();
             $reportPurchase->number         = $purchase->number;
@@ -89,6 +87,25 @@ class DetailPurchaseController extends Controller
             $reportPurchase->price          = $item->price;
             $reportPurchase->user_id        = Auth::user()->id;
             $reportPurchase->save();
+
+            $reportStock                        = new ReportStock();
+            $reportStock->type                  = "purchase";
+            $reportStock->transaction_number    = $purchase->number;
+            $reportStock->quantity_initial      = $product->stock;
+            $reportStock->price_initial         = $product->price;
+            $reportStock->quantity_in           = $item->quantity;
+            $reportStock->cogs_in               = $item->total;
+            $reportStock->quantity_out          = 0;
+            $reportStock->cogs_out              = 0;
+            $reportStock->quantity_avg          = $product->stock + $item->quantity;
+            $reportStock->cogs_avg              = $this->getCogsAvg($product->price, $product->stock, $item->price, $item->quantity);
+            $reportStock->product_id            = $product->id;
+            $reportStock->user_id               = Auth::user()->id;
+            $reportStock->save();
+
+            $product->stock += $item->quantity;
+            $product->price = $item->price;
+            $product->save();
         }
 
         $purchase->status = 'done';
@@ -98,5 +115,10 @@ class DetailPurchaseController extends Controller
             'success'   => true,
             'message'   => 'Berhasil Menyelesaikan'
         ]);
+    }
+
+    private function getCogsAvg($price_initial, $quantity_initial, $price, $quantity) {
+        $cogs = (( $price_initial * $quantity_initial ) + ( $price * $quantity )) / ($quantity_initial + $quantity);
+        return $cogs;
     }
 }

@@ -66,4 +66,9 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ReportPurchase');
     }
+
+    public function report_stocks()
+    {
+        return $this->hasMany('App\Models\ReportStock');
+    }
 }

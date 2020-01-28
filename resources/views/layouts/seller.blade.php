@@ -154,6 +154,11 @@
                                 <i class="fa fa-list"></i> <span>Laporan Pembelian</span>
                             </a>
                         </li>
+                        <li class="{{(Request::segment(2) == 'report-stock') ? "active" : ""}}">
+                            <a href="{{ route('seller.report-stock.index') }}">
+                                <i class="fa fa-list"></i> <span>Laporan Ketersediaan</span>
+                            </a>
+                        </li>
                     @endif
                 </ul>
                 <!-- /.sidebar-menu -->

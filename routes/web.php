@@ -155,10 +155,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('detail-assembly/done', 'DetailAssemblyController@done')->name('detail-assembly.done');
 
         // report selling
-        Route::match(['get', 'post'], 'report-selling',   'ReportSellingController@index')->name('report-selling.index');
+        Route::match(['get', 'post'], 'report-selling',     'ReportSellingController@index')->name('report-selling.index');
 
         // report purchase
-        Route::match(['get', 'post'], 'report-purchase',   'ReportPurchaseController@index')->name('report-purchase.index');
+        Route::match(['get', 'post'], 'report-purchase',    'ReportPurchaseController@index')->name('report-purchase.index');
+
+        // report stock
+        Route::match(['get', 'post'], 'report-stock',       'ReportStockController@index')->name('report-stock.index');
     });
 });
 

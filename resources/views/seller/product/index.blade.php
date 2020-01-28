@@ -26,7 +26,7 @@
                             <th>No</th>
                             <th>Kode</th>
                             <th>Nama</th>
-                            <th>Harga Pokok</th>
+                            {{-- <th>Harga Pokok</th> --}}
                             <th>Harga Jual</th>
                             <th>Tersedia</th>
                             <th>Status</th>
@@ -305,10 +305,10 @@
                         "data": "name",
                         "orderable": true,
                     },
-                    {
-                        "data": "price",
-                        "orderable": true,
-                    },
+                    // {
+                    //     "data": "price",
+                    //     "orderable": true,
+                    // },
                     {
                         "data": "selling_price",
                         "orderable": true,
@@ -335,7 +335,7 @@
                         "orderable": false,
                     }
                 ],
-                "order": [ 7, 'desc' ],
+                "order": [ 6, 'desc' ],
                 "fnCreatedRow" : function(nRow, aData, iDataIndex) {
                     $(nRow).attr('data', JSON.stringify(aData));
                 }

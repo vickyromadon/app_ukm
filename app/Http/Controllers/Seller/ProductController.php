@@ -27,7 +27,7 @@ class ProductController extends Controller
             $column = [
                 "code",
                 "name",
-                "price",
+                // "price",
                 "selling_price",
                 "stock",
                 "status",
