@@ -32,11 +32,11 @@ class Seller extends Model
 
     public function carts()
     {
-        return $this->hashMany('App\Models\Cart');
+        return $this->hasMany('App\Models\Cart');
     }
 
     public function invoices()
     {
-        return $this->hashMany('App\Models\Invoice');
+        return $this->hasMany('App\Models\Invoice');
     }
 }

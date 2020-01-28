@@ -59,6 +59,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Availability');
     }
 
+    public function assemblies()
+    {
+        return $this->hasMany('App\Models\Assembly');
+    }
+
     public function banks()
     {
         return $this->hasMany('App\Models\Bank');
@@ -71,16 +76,26 @@ class User extends Authenticatable
 
     public function carts()
     {
-        return $this->hashMany('App\Models\Cart');
+        return $this->hasMany('App\Models\Cart');
     }
 
     public function invoices()
     {
-        return $this->hashMany('App\Models\Invoice');
+        return $this->hasMany('App\Models\Invoice');
     }
 
     public function payments()
     {
         return $this->hasMany('App\Models\Payment');
+    }
+
+    public function report_sellings()
+    {
+        return $this->hasMany('App\Models\ReportSelling');
+    }
+
+    public function report_purchases()
+    {
+        return $this->hasMany('App\Models\ReportPurchase');
     }
 }

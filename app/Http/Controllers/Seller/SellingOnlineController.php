@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Seller;
 
 use App\Models\Invoice;
 use App\Models\Product;
+use App\Models\ReportSelling;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -30,10 +31,20 @@ class SellingOnlineController extends Controller
         $invoice->status = "approve";
 
         if ($invoice->save()) {
-            foreach ($$invoice->invoice_carts as $item) {
+            foreach ($invoice->invoice_carts as $item) {
                 $product = Product::find($item->cart->product->id);
                 $product->stock -= $item->cart->quantity;
                 $product->save();
+
+                $reportSelling                  = new ReportSelling();
+                $reportSelling->number          = $invoice->number;
+                $reportSelling->product_id      = $product->id;
+                $reportSelling->type            = "online";
+                $reportSelling->quantity        = $item->cart->quantity;
+                $reportSelling->price           = $item->cart->price;
+                $reportSelling->user_id         = Auth::user()->id;
+                $reportSelling->customer_name   = $invoice->user->name;
+                $reportSelling->save();
             }
 
             return response()->json([

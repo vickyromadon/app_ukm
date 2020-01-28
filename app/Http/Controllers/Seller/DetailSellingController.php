@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Seller;
 use App\Models\DetailSelling;
 use App\Models\Product;
 use App\Models\Selling;
+use App\Models\ReportSelling;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -19,9 +20,16 @@ class DetailSellingController extends Controller
             'quantity'      => 'required|numeric',
         ]);
 
-        $product = Product::find($request->product_id);
+        $checkDetailSelling = DetailSelling::where('selling_id', $request->selling_id)->where('product_id', $request->product_id)->where('status', 'pending')->first();
+        if ($checkDetailSelling != null) {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Gagal Menambahkan, Produk Sudah Terdaftar'
+            ]);
+        }
 
-        if ($product->stock < $request->quantity) {
+        $product = Product::find($request->product_id);
+        if ($request->quantity > $product->stock) {
             return response()->json([
                 'success'   => false,
                 'message'   => 'Gagal Menambahkan, Karena Stock Tidak Mencukupi.'
@@ -61,6 +69,16 @@ class DetailSellingController extends Controller
             $product = Product::find($item->product_id);
             $product->stock -= $item->quantity;
             $product->save();
+
+            $reportSelling                  = new ReportSelling();
+            $reportSelling->number          = $selling->number;
+            $reportSelling->product_id      = $product->id;
+            $reportSelling->type            = "offline";
+            $reportSelling->quantity        = $item->quantity;
+            $reportSelling->price           = $item->total;
+            $reportSelling->user_id         = Auth::user()->id;
+            $reportSelling->customer_name   = $selling->customer->name;
+            $reportSelling->save();
         }
 
         $selling->status = 'done';

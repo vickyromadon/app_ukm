@@ -3,11 +3,11 @@
 @section('header')
 	<section class="content-header">
 		<h1>
-            Produk
+            Perakitan
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="#"><i class="fa fa-dashboard"></i> Penjual</a></li>
-			<li class="active">Produk</li>
+			<li class="active">Perakitan</li>
 		</ol>
 	</section>
 @endsection
@@ -24,12 +24,9 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Kode</th>
-                            <th>Nama</th>
-                            <th>Harga Pokok</th>
-                            <th>Harga Jual</th>
-                            <th>Tersedia</th>
-                            <th>Status</th>
+                            <th>Nomor Perakitan</th>
+                            <th>Deskripsi</th>
+                            <th>Tanggal</th>
                             <th>Tanggal di Buat</th>
                             <th>Aksi</th>
                         </tr>
@@ -55,46 +52,6 @@
                         <div class="form-horizontal">
                             <input type="hidden" id="id" name="id">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Nama</label>
-
-                                <div class="col-sm-9">
-                                    <input type="text" id="name" name="name" class="form-control" placeholder="Masukkan Nama">
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" hidden>
-                                <label class="col-sm-3 control-label">Harga Jual</label>
-
-                                <div class="col-sm-9">
-                                    <input type="number" id="selling_price" name="selling_price" class="form-control" placeholder="Masukkan Harga Jual">
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-                            {{-- <div class="form-group">
-                                <label class="col-sm-3 control-label">Harga</label>
-
-                                <div class="col-sm-9">
-                                    <input type="number" id="price" name="price" class="form-control" placeholder="Masukkan Harga">
-                                    <span class="help-block"></span>
-                                </div>
-                            </div> --}}
-                            {{-- <div class="form-group">
-                                <label class="col-sm-3 control-label">Tersedia</label>
-
-                                <div class="col-sm-9">
-                                    <input type="number" id="stock" name="stock" class="form-control" placeholder="Masukkan Tersedia">
-                                    <span class="help-block"></span>
-                                </div>
-                            </div> --}}
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Minimal Tersedia</label>
-
-                                <div class="col-sm-9">
-                                    <input type="number" id="minimum_stock" name="minimum_stock" class="form-control" placeholder="Masukkan Minimal Tersedia">
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="col-sm-3 control-label">Deskripsi</label>
 
                                 <div class="col-sm-9">
@@ -103,48 +60,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Gambar</label>
+                                <label class="col-sm-3 control-label">Tanggal</label>
 
                                 <div class="col-sm-9">
-                                    <input type="file" id="image" name="image" class="form-control" placeholder="Masukkan Gambar">
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Satuan</label>
-
-                                <div class="col-sm-9">
-                                    <select name="unit_id" id="unit_id" class="form-control">
-                                        <option value="">-- Pilih Salah Satu --</option>
-                                        @foreach ($unit as $item)
-                                            <option value="{{ $item->id }}">{{$item->name}}</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Jenis</label>
-
-                                <div class="col-sm-9">
-                                    <select name="type_id" id="type_id" class="form-control">
-                                        <option value="">-- Pilih Salah Satu --</option>
-                                        @foreach ($type as $item)
-                                            <option value="{{ $item->id }}">{{$item->name}}</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Status</label>
-
-                                <div class="col-sm-9">
-                                    <select name="status" id="status" class="form-control">
-                                        <option value="">-- Pilih Salah Satu --</option>
-                                        <option value="publish">Aktif</option>
-                                        <option value="no publish">Tidak Aktif</option>
-                                    </select>
+                                    <input type="date" name="date" id="date" class="form-control" placeholder="Masukkan Tanggal">
                                     <span class="help-block"></span>
                                 </div>
                             </div>
@@ -167,17 +86,17 @@
     <div class="modal fade" tabindex="-1" role="dialog" id="modalDelete">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('seller.product.destroy', ['id' => '#']) }}" method="post" id="formDelete">
+                <form action="{{ route('seller.assembly.destroy', ['id' => '#']) }}" method="post" id="formDelete">
                 	{{ method_field('DELETE') }}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title">Hapus Produk</h4>
+                        <h4 class="modal-title">Hapus Perakitan</h4>
                     </div>
 
                     <div class="modal-body">
-                        <p id="del-success">Anda yakin ingin menghapus Produk ?</p>
+                        <p id="del-success">Anda yakin ingin menghapus Perakitan ?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
@@ -191,89 +110,11 @@
             </div>
         </div>
     </div>
-
-    <!-- view -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="modalView">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title"></h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <table style="border-spacing: 10px; border-collapse: separate;">
-                        <tr>
-                            <th>Kode</th>
-                            <td>:</td>
-                            <td id="code"></td>
-                        </tr>
-                        <tr>
-                            <th>Gambar</th>
-                            <td>:</td>
-                            <td id="image"><img src="#" class="img-thumbnail" style="height:40vh; width:50vh;"></td>
-                        </tr>
-                        <tr>
-                            <th>Nama</th>
-                            <td>:</td>
-                            <td id="name"></td>
-                        </tr>
-                        <tr>
-                            <th>Tersedia</th>
-                            <td>:</td>
-                            <td id="stock"></td>
-                        </tr>
-                        <tr>
-                            <th>Minimal Tersedia</th>
-                            <td>:</td>
-                            <td id="minimum_stock"></td>
-                        </tr>
-                        <tr>
-                            <th>Harga Pokok</th>
-                            <td>:</td>
-                            <td id="price"></td>
-                        </tr>
-                        <tr>
-                            <th>Harga Jual</th>
-                            <td>:</td>
-                            <td id="selling_price"></td>
-                        </tr>
-                        <tr>
-                            <th>Satuan</th>
-                            <td>:</td>
-                            <td id="unit"></td>
-                        </tr>
-                        <tr>
-                            <th>Jenis</th>
-                            <td>:</td>
-                            <td id="type"></td>
-                        </tr>
-                        <tr>
-                            <th>Deskripsi</th>
-                            <td>:</td>
-                            <td id="description"></td>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <td>:</td>
-                            <td id="status"></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">
-                        Tutup
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('js')
-	<script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+    <script>
         jQuery(document).ready(function($){
             var table = $('#data_table').DataTable({
                 "bFilter": true,
@@ -281,7 +122,7 @@
                 "serverSide": true,
                 "lengthChange": true,
                 "ajax": {
-                    "url": "{{ route('seller.product.index') }}",
+                    "url": "{{ route('seller.assembly.index') }}",
                     "type": "POST",
                     "data" : {}
                 },
@@ -298,27 +139,15 @@
                        "orderable": false,
                     },
                     {
-                        "data": "code",
+                        "data": "number",
                         "orderable": true,
                     },
                     {
-                        "data": "name",
-                        "orderable": true,
+                        "data": "description",
+                        "orderable": false,
                     },
                     {
-                        "data": "price",
-                        "orderable": true,
-                    },
-                    {
-                        "data": "selling_price",
-                        "orderable": true,
-                    },
-                    {
-                        "data": "stock",
-                        "orderable": true,
-                    },
-                    {
-                        "data": "status",
+                        "data": "date",
                         "orderable": true,
                     },
                     {
@@ -327,7 +156,7 @@
                     },
                     {
                         render : function(data, type, row){
-                            return	'<a href="#" class="view-btn btn btn-xs btn-info"><i class="fa fa-eye"></i></a> &nbsp' +
+                            return  '<a href="{{ route('seller.assembly.index') }}/'+ row.id +'" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></a> &nbsp' +
                                     '<a href="#" class="edit-btn btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a> &nbsp' +
                                 	'<a href="#" class="delete-btn btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>';
                         },
@@ -335,27 +164,22 @@
                         "orderable": false,
                     }
                 ],
-                "order": [ 7, 'desc' ],
+                "order": [ 4, 'desc' ],
                 "fnCreatedRow" : function(nRow, aData, iDataIndex) {
                     $(nRow).attr('data', JSON.stringify(aData));
                 }
             });
 
-            var url;
-
             // add
             $('#btnAdd').click(function () {
                 $('#formAdd')[0].reset();
-                $('#formAdd .modal-title').text("Tambah Produk");
+                $('#formAdd .modal-title').text("Tambah Perakitan");
                 $('#formAdd div.form-group').removeClass('has-error');
                 $('#formAdd .help-block').empty();
                 $('#formAdd button[type=submit]').button('reset');
 
                 $('#formAdd input[name="_method"]').remove();
-                url = '{{ route("seller.product.store") }}';
-
-                $("#formAdd input[name='selling_price']").parent().parent().attr("hidden",true);
-
+                url = '{{ route("seller.assembly.store") }}';
 
                 $('#modalAdd').modal('show');
             });
@@ -364,27 +188,17 @@
             $('#data_table').on('click', '.edit-btn', function(e){
                 $('#formAdd div.form-group').removeClass('has-error');
                 $('#formAdd .help-block').empty();
-                $('#formAdd .modal-title').text("Ubah Produk");
+                $('#formAdd .modal-title').text("Ubah Perakitan");
                 $('#formAdd')[0].reset();
                 var aData = JSON.parse($(this).parent().parent().attr('data'));
                 $('#formAdd button[type=submit]').button('reset');
 
                 $('#formAdd .modal-body .form-horizontal').append('<input type="hidden" name="_method" value="PUT">');
-                url = '{{ route("seller.product.index") }}' + '/' + aData.id;
-
-                $("#formAdd input[name='selling_price']").parent().parent().attr("hidden",false);
-
+                url = '{{ route("seller.assembly.index") }}' + '/' + aData.id;
 
                 $('#id').val(aData.id);
-                $('#name').val(aData.name);
-                // $('#stock').val(aData.stock);
-                // $('#price').val(aData.price);
-                $('#selling_price').val(aData.selling_price);
-                $('#minimum_stock').val(aData.minimum_stock);
                 $('#description').val(aData.description);
-                $('#unit_id').val(aData.unit_id);
-                $('#type_id').val(aData.type_id);
-                $('#status').val(aData.status);
+                $('#date').val(aData.date);
 
                 $('#modalAdd').modal('show');
             });
@@ -569,37 +383,6 @@
                         $('#formDelete button[type=submit]').button('reset');
                     }
                 });
-            });
-
-            // View
-            $('#data_table').on('click', '.view-btn', function(e){
-                $('#modalView .modal-title').text("Lihat Produk");
-
-                var aData = JSON.parse($(this).parent().parent().attr('data'));
-
-                $('#modalView #code').text(aData.code);
-                $('#modalView #name').text(aData.name);
-
-                if (aData.image == null || aData.image == "-") {
-                    $('#modalView #image img').attr("src", "{{asset('images/product_default.png')}}");
-                } else {
-                    $('#modalView #image img').attr("src", "{{ asset('storage/')}}" + "/" + aData.image);
-                }
-
-                $('#modalView #description').text(aData.description);
-                $('#modalView #stock').text(aData.stock);
-                $('#modalView #price').text(aData.price);
-                $('#modalView #minimum_stock').text(aData.minimum_stock);
-                $('#modalView #unit').text(aData.unit.name);
-                $('#modalView #type').text(aData.type.name);
-
-                if (aData.status == 'publish') {
-                    $('#modalView #status').text("Aktif");
-                } else {
-                    $('#modalView #status').text("Tidak Aktif");
-                }
-
-                $('#modalView').modal('show');
             });
         });
     </script>

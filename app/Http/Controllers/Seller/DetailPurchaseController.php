@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Models\DetailPurchase;
+use App\Models\ReportPurchase;
 use App\Models\Product;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
@@ -79,6 +80,15 @@ class DetailPurchaseController extends Controller
             $product->stock += $item->quantity;
             $product->price = $item->price;
             $product->save();
+
+            $reportPurchase                 = new ReportPurchase();
+            $reportPurchase->number         = $purchase->number;
+            $reportPurchase->product_id     = $product->id;
+            $reportPurchase->supplier_id    = $purchase->supplier_id;
+            $reportPurchase->quantity       = $item->quantity;
+            $reportPurchase->price          = $item->price;
+            $reportPurchase->user_id        = Auth::user()->id;
+            $reportPurchase->save();
         }
 
         $purchase->status = 'done';

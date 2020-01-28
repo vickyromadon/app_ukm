@@ -22,6 +22,6 @@ class Selling extends Model
 
     public function detail_sellings()
     {
-        return $this->hashMany('App\Models\DetailSelling');
+        return $this->hasMany('App\Models\DetailSelling');
     }
 }

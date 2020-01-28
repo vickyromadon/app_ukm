@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Availability extends Model
+class Assembly extends Model
 {
     protected $fillable = [
         'number', 'description', 'status', 'date'
@@ -15,8 +15,13 @@ class Availability extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    public function detail_availabilities()
+    public function product_assemblies()
     {
-        return $this->hasMany('App\Models\DetailAvailability');
+        return $this->hasMany('App\Models\ProductAssembly');
+    }
+
+    public function detail_assemblies()
+    {
+        return $this->hasMany('App\Models\DetailAssembly');
     }
 }

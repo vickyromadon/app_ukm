@@ -89,7 +89,7 @@ class ProductController extends Controller
         $validator = $request->validate([
             'name'          => 'required|string|max:20',
             'description'   => 'required|string',
-            'selling_price' => 'required|numeric',
+            // 'selling_price' => 'required|numeric',
             // 'price'         => 'required|numeric',
             // 'stock'         => 'required|numeric',
             'minimum_stock' => 'required|numeric',
@@ -103,7 +103,7 @@ class ProductController extends Controller
         $product->code          = "PR" . date("Ymdhis");
         $product->name          = $request->name;
         $product->description   = $request->description;
-        $product->selling_price = $request->selling_price;
+        $product->selling_price = 0;
         $product->price         = 0;
         $product->stock         = 0;
         $product->minimum_stock = $request->minimum_stock;

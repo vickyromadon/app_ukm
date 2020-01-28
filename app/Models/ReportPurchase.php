@@ -4,11 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Purchase extends Model
+class ReportPurchase extends Model
 {
     protected $fillable = [
-        'number', 'date', 'description', 'date'
+        'quantity', 'price', 'number'
     ];
+
+    public function product()
+    {
+        return $this->belongsTo('App\Models\Product');
+    }
 
     public function user()
     {
@@ -18,10 +23,5 @@ class Purchase extends Model
     public function supplier()
     {
         return $this->belongsTo('App\Models\Supplier');
-    }
-
-    public function detail_purchases()
-    {
-        return $this->hasMany('App\Models\DetailPurchase');
     }
 }

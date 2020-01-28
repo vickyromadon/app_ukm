@@ -29,11 +29,41 @@ class Product extends Model
 
     public function detail_purchases()
     {
-        return $this->hashMany('App\Models\DetailPurchase');
+        return $this->hasMany('App\Models\DetailPurchase');
     }
 
     public function carts()
     {
-        return $this->hashMany('App\Models\Cart');
+        return $this->hasMany('App\Models\Cart');
+    }
+
+    public function product_assembly()
+    {
+        return $this->hasMany('App\Models\ProductAssembly');
+    }
+
+    public function detail_assemblies()
+    {
+        return $this->hasMany('App\Models\DetailAssembly');
+    }
+
+    public function detail_availabilities()
+    {
+        return $this->hasMany('App\Models\DetailAvailability');
+    }
+
+    public function detail_sellings()
+    {
+        return $this->hasMany('App\Models\DetailSelling');
+    }
+
+    public function report_sellings()
+    {
+        return $this->hasMany('App\Models\ReportSelling');
+    }
+
+    public function report_purchases()
+    {
+        return $this->hasMany('App\Models\ReportPurchase');
     }
 }

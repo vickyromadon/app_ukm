@@ -132,6 +132,32 @@ Route::group(['middleware' => ['auth']], function () {
         ]]);
         Route::post('selling-online/approve',               'SellingOnlineController@approve')->name('selling-online.approve');
         Route::post('selling-online/reject',                'SellingOnlineController@reject')->name('selling-online.reject');
+
+        // assembly
+        Route::match(['get', 'post'], 'assembly',   'AssemblyController@index')->name('assembly.index');
+        Route::post('assembly/add',                 'AssemblyController@store')->name('assembly.store');
+        Route::resource('assembly',                 'AssemblyController', ['only' => [
+            'update', 'destroy', 'show'
+        ]]);
+
+        // Product Assembly
+        Route::post('product-assembly/add',   'ProductAssemblyController@store')->name('product-assembly.store');
+        Route::resource('product-assembly',   'ProductAssemblyController', ['only' => [
+            'destroy'
+        ]]);
+
+        // Detail Assembly
+        Route::post('detail-assembly/add',   'DetailAssemblyController@store')->name('detail-assembly.store');
+        Route::resource('detail-assembly',   'DetailAssemblyController', ['only' => [
+            'destroy'
+        ]]);
+        Route::post('detail-assembly/done', 'DetailAssemblyController@done')->name('detail-assembly.done');
+
+        // report selling
+        Route::match(['get', 'post'], 'report-selling',   'ReportSellingController@index')->name('report-selling.index');
+
+        // report purchase
+        Route::match(['get', 'post'], 'report-purchase',   'ReportPurchaseController@index')->name('report-purchase.index');
     });
 });
 

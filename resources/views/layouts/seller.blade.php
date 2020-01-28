@@ -139,6 +139,21 @@
                                 <i class="fa fa-list"></i> <span>Penyesuaian</span>
                             </a>
                         </li>
+                        <li class="{{(Request::segment(2) == 'assembly') ? "active" : ""}}">
+                            <a href="{{ route('seller.assembly.index') }}">
+                                <i class="fa fa-list"></i> <span>Perakitan</span>
+                            </a>
+                        </li>
+                        <li class="{{(Request::segment(2) == 'report-selling') ? "active" : ""}}">
+                            <a href="{{ route('seller.report-selling.index') }}">
+                                <i class="fa fa-list"></i> <span>Laporan Penjualan</span>
+                            </a>
+                        </li>
+                        <li class="{{(Request::segment(2) == 'report-purchase') ? "active" : ""}}">
+                            <a href="{{ route('seller.report-purchase.index') }}">
+                                <i class="fa fa-list"></i> <span>Laporan Pembelian</span>
+                            </a>
+                        </li>
                     @endif
                 </ul>
                 <!-- /.sidebar-menu -->
