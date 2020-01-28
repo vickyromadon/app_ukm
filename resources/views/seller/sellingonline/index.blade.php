@@ -25,6 +25,7 @@
                         <tr>
                             <th>Nomor Invoice</th>
                             <th>Pembeli</th>
+                            <th>Status</th>
                             <th>Tanggal di Buat</th>
                             <th>Aksi</th>
                         </tr>
@@ -34,6 +35,13 @@
                             <tr>
                                 <td>{{ $item->number }}</td>
                                 <td>{{ $item->user->name }}</td>
+                                <td>
+                                    @if ($item->status == 'payment')
+                                        pending
+                                    @else
+                                        {{ $item->status }}
+                                    @endif
+                                </td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>
                                     <a href="{{ route('seller.selling-online.index') }}/{{ $item->id }}" class="btn btn-info btn-xs">
@@ -48,3 +56,18 @@
         </div>
     </div>
 @endsection
+
+@section('js')
+    <script>
+        jQuery(document).ready(function($){
+            $(document).ready( function () {
+                $('#data_table').DataTable({
+                    "language": {
+                        "emptyTable": "Tidak Ada Data Tersedia",
+                    }
+                });
+            });
+        });
+    </script>
+@endsection
+

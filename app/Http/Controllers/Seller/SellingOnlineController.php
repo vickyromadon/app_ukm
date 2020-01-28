@@ -14,7 +14,7 @@ class SellingOnlineController extends Controller
     public function index()
     {
         return $this->view([
-            'data' => Invoice::where('seller_id', Auth::user()->seller->id)->where('status', 'payment')->get()
+            'data' => Invoice::where('seller_id', Auth::user()->seller->id)->get()
         ]);
     }
 
