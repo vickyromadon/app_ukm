@@ -84,6 +84,14 @@
                             {{ $data->seller->phone }}
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            Kategori
+                        </div>
+                        <div class="col-md-8">
+                            {{ $data->seller->category->name }}
+                        </div>
+                    </div>
                 </div>
                 @if ($data->seller->status == "pending")
                     <div class="box-footer">

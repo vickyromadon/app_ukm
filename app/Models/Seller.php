@@ -39,4 +39,9 @@ class Seller extends Model
     {
         return $this->hasMany('App\Models\Invoice');
     }
+
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category');
+    }
 }

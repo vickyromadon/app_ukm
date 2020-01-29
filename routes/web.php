@@ -27,6 +27,11 @@ Route::get('product',               'ProductController@index')->name('product.in
 Route::get('product/detail/{id}',   'ProductController@show')->name('product.show');
 
 Route::group(['middleware' => ['auth']], function () {
+    // profile
+    Route::get('/profile',                          'ProfileController@index')->name('profile.index');
+    Route::post('/profile/change-password/{id}',    'ProfileController@changePassword')->name('profile.change-password');
+    Route::post('/profile/change-setting/{id}',     'ProfileController@changeSetting')->name('profile.change-setting');
+
     // cart
     Route::match(['get', 'post'], 'cart',   'CartController@index')->name('cart.index');
     Route::post('cart/add',                 'CartController@store')->name('cart.store');
@@ -52,6 +57,12 @@ Route::group(['middleware' => ['auth']], function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::prefix('seller')->namespace('Seller')->name('seller.')->group(function () {
         Route::get('/', 'HomeController@index')->name('index');
+
+        // profile
+        Route::get('/profile',                          'ProfileController@index')->name('profile.index');
+        Route::post('/profile/change-password/{id}',    'ProfileController@changePassword')->name('profile.change-password');
+        Route::post('/profile/change-setting/{id}',     'ProfileController@changeSetting')->name('profile.change-setting');
+        Route::post('/profile/change-location/{id}',    'ProfileController@changeLocation')->name('profile.change-location');
 
         // seller
         Route::match(['get', 'post'], 'seller',   'SellerController@index')->name('seller.index');

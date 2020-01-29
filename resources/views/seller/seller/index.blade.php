@@ -26,6 +26,19 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 control-label">Kategori</label>
+
+                    <div class="col-sm-10">
+                        <select name="category_id" id="category_id" class="form-control">
+                            <option value="">-- Pilih Salah Satu --</option>
+                            @foreach ($category as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label">Alamat</label>
 
                     <div class="col-sm-10">

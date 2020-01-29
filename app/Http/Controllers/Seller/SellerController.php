@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Seller;
 use App\Models\Location;
 use App\Models\Document;
 use App\Models\Seller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -26,6 +27,7 @@ class SellerController extends Controller
 
             $validator = $request->validate([
                 'phone'         => 'required|numeric',
+                'category_id'   => 'required|numeric',
                 'address'       => 'required|string',
                 'sub_district'  => 'required|string',
                 'district'      => 'required|string',
@@ -51,6 +53,7 @@ class SellerController extends Controller
 
             $seller                 = new Seller();
             $seller->phone          = $request->phone;
+            $seller->category_id    = $request->category_id;
             $seller->user_id        = Auth::user()->id;
             $seller->location_id    = $location->id;
             $seller->document_id    = $document->id;
@@ -68,6 +71,8 @@ class SellerController extends Controller
             }
         }
 
-        return $this->view();
+        return $this->view([
+            'category' => Category::all()
+        ]);
     }
 }
