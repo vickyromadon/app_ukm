@@ -162,6 +162,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         // report stock
         Route::match(['get', 'post'], 'report-stock',       'ReportStockController@index')->name('report-stock.index');
+
+        // report profit
+        Route::match(['get', 'post'], 'report-profit',       'ReportProfitController@index')->name('report-profit.index');
     });
 });
 
