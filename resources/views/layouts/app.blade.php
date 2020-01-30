@@ -49,6 +49,14 @@
                                     Tentang
                                 </a>
                             </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Kategori UMKM <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    @foreach (\App\Models\Category::all() as $item)
+                                        <li><a href="{{ route('umkm.category', ['id' => $item->id]) }}">{{ $item->name }}</a></li>
+                                    @endforeach
+                                </ul>
+                            </li>
                             @if (Auth::user())
                                 <li class="{{ Request::segment(1) == 'invoice' ? "active" : "" }}">
                                     <a href="{{ route('invoice.index') }}">

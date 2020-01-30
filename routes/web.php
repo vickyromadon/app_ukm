@@ -26,6 +26,9 @@ Route::get('about',                 'HomeController@about')->name('about');
 Route::get('product',               'ProductController@index')->name('product.index');
 Route::get('product/detail/{id}',   'ProductController@show')->name('product.show');
 
+Route::get('umkm/category/{id}',    'UMKMController@category')->name('umkm.category');
+Route::get('umkm/detail/{id}',      'UMKMController@detail')->name('umkm.detail');
+
 Route::group(['middleware' => ['auth']], function () {
     // profile
     Route::get('/profile',                          'ProfileController@index')->name('profile.index');
