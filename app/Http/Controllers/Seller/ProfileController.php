@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Seller;
 use App\Models\Location;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
@@ -57,22 +58,31 @@ class ProfileController extends Controller
             'phone'         => ['required', 'string'],
         ]);
 
-        $user       = User::find($id);
-        $user->name = $request->name;
+        $statusRes = false;
 
-        if ($user->save()) {
-            $seller         = Seller::where('user_id', $user->id)->first();
-            $seller->phone  = $request->phone;
-            $seller->save();
+        DB::transaction(function () use ($request, &$statusRes, &$id) {
+            $user       = User::find($id);
+            $user->name = $request->name;
 
+            if ($user->save()) {
+                $seller         = Seller::where('user_id', $user->id)->first();
+                $seller->phone  = $request->phone;
+
+                if ($seller->save()) {
+                    $statusRes = true;
+                }
+            }
+        });
+
+        if (!$statusRes) {
             return response()->json([
-                'success' => true,
-                'message' => 'Berhasil Merubah',
+                'success'   => false,
+                'message'   => 'Gagal Merubah'
             ]);
         } else {
             return response()->json([
-                'success' => false,
-                'message' => 'Gagal Merubah',
+                'success'  => true,
+                'message'  => 'Berhasil Merubah'
             ]);
         }
     }
