@@ -29,7 +29,7 @@ Route::get('product/detail/{id}',   'ProductController@show')->name('product.sho
 Route::get('umkm/category/{id}',    'UMKMController@category')->name('umkm.category');
 Route::get('umkm/detail/{id}',      'UMKMController@detail')->name('umkm.detail');
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'member']], function () {
     // profile
     Route::get('/profile',                          'ProfileController@index')->name('profile.index');
     Route::post('/profile/change-password/{id}',    'ProfileController@changePassword')->name('profile.change-password');
@@ -57,7 +57,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 });
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'seller']], function () {
     Route::prefix('seller')->namespace('Seller')->name('seller.')->group(function () {
         Route::get('/', 'HomeController@index')->name('index');
 
@@ -187,7 +187,7 @@ Route::prefix('admin')->namespace('Admin')->name('admin.')->group(function () {
     Route::match(['get', 'post'], 'login', 'Auth\LoginController@login')->name('login');
     Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
-    Route::group(['middleware' => ['auth']], function () {
+    Route::group(['middleware' => ['auth', 'admin']], function () {
         // home
         Route::get('/', 'HomeController@index')->name('index');
 
