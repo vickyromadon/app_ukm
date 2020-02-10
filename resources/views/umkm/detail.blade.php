@@ -2,6 +2,83 @@
 
 @section('content')
     <div class="row">
+         <div class="col-md-12">
+            <div class="box box-degfault">
+                <div class="box-header with-border">
+                    <center>
+                        <h3 class="box-title">
+                            Infomasi Tentang UMKM
+                        </h3>
+                    </center>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>Nama</b>
+                                </div>
+                                <div class="col-md-8">
+                                    {{ $seller->user->name }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>Email</b>
+                                </div>
+                                <div class="col-md-8">
+                                    {{ $seller->user->email }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>Nomor Handphone</b>
+                                </div>
+                                <div class="col-md-8">
+                                    {{ $seller->phone }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>Alamat</b>
+                                </div>
+                                <div class="col-md-8">
+                                    {{ $seller->location->address }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>Kecamatan</b>
+                                </div>
+                                <div class="col-md-8">
+                                    {{ $seller->location->sub_district }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>Kabupaten</b>
+                                </div>
+                                <div class="col-md-8">
+                                    {{ $seller->location->district }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>Provinsi</b>
+                                </div>
+                                <div class="col-md-8">
+                                    {{ $seller->location->province }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+    <div class="row">
         @foreach ($product as $item)
             <div class="col-md-4">
                 <div class="box box-degfault">
@@ -21,24 +98,24 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <h4 style="font-weight:bolder;">
-                                    Nama UKM
-                                </h4>
-                            </div>
-                            <div class="col-md-8">
-                                <h4>
-                                    {{ $item->user->name }}
-                                </h4>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h4 style="font-weight:bolder;">
                                     Harga
                                 </h4>
                             </div>
                             <div class="col-md-8">
                                 <h4>
                                     Rp. {{ number_format($item->selling_price) }}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 style="font-weight:bolder;">
+                                    Tersedia
+                                </h4>
+                            </div>
+                            <div class="col-md-8">
+                                <h4>
+                                    {{ $item->stock }}
                                 </h4>
                             </div>
                         </div>

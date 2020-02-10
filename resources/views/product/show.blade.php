@@ -37,7 +37,9 @@
                 <div class="col-md-12">
                     <h3 style="font-weight:bolder; margin:0px; padding:0px;">
                         <i class="fa fa-university"></i>
-                        {{ $product->user->name }}
+                        <a href="{{ route('umkm.detail', ['id' => $product->user->seller->id]) }}">
+                            {{ $product->user->name }}
+                        </a>
                     </h3>
                 </div>
             </div>

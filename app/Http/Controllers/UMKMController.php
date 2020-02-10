@@ -26,6 +26,7 @@ class UMKMController extends Controller
 
         return $this->view([
             'product' => $product,
+            'seller' => $seller
         ]);
     }
 }
