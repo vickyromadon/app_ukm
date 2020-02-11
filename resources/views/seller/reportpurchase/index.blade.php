@@ -107,14 +107,6 @@
                                 i : 0;
                     };
 
-                    // Total over all pages
-                    total = api
-                        .column( 5 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
                     // Total over this page
                     pageTotal = api
                         .column( 5, { page: 'current'} )
@@ -125,7 +117,7 @@
 
                     // Update footer
                     $( api.column( 5 ).footer() ).html(
-                        pageTotal +' ( '+ total +' Grand total)'
+                        pageTotal
                     );
                 },
                 "order": [ 6, 'desc' ],

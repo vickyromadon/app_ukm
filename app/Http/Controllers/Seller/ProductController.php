@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ReportProfit;
+use App\Models\DetailReportProfit;
+use App\Models\SideReportProfit;
 
 class ProductController extends Controller
 {
@@ -128,6 +131,38 @@ class ProductController extends Controller
                 'message'   => 'Gagal Menambahkan'
             ]);
         } else {
+            $reportProfit               = new ReportProfit();
+            $reportProfit->product_id   = $product->id;
+            $reportProfit->user_id      = Auth::user()->id;
+
+            if ($reportProfit->save()) {
+                $detailReportProfit                     = new DetailReportProfit();
+                $detailReportProfit->report_profit_id   = $reportProfit->id;
+                $detailReportProfit->quantity_in        = 0;
+                $detailReportProfit->cogs_in            = 0;
+                $detailReportProfit->quantity_out       = 0;
+                $detailReportProfit->cogs_out           = 0;
+                $detailReportProfit->quantity_avg       = 0;
+                $detailReportProfit->cogs_avg           = 0;
+                $detailReportProfit->type               = "initial";
+                $detailReportProfit->transaction_number = "-";
+                $detailReportProfit->transaction_date   = date("Y-m-d");
+
+                if ($detailReportProfit->save()) {
+                    $sideReportProfit                           = new SideReportProfit();
+                    $sideReportProfit->product_id               = $product->id;
+                    $sideReportProfit->type                     = $detailReportProfit->type;
+                    $sideReportProfit->quantity_in              = $detailReportProfit->quantity_in;
+                    $sideReportProfit->cogs_in                  = $detailReportProfit->cogs_in;
+                    $sideReportProfit->quantity_out             = $detailReportProfit->quantity_out;
+                    $sideReportProfit->cogs_out                 = $detailReportProfit->cogs_out;
+                    $sideReportProfit->quantity_avg             = $detailReportProfit->quantity_avg;
+                    $sideReportProfit->cogs_avg                 = $detailReportProfit->cogs_avg;
+
+                    $sideReportProfit->save();
+                }
+            }
+
             return response()->json([
                 'success'  => true,
                 'message'  => 'Berhasil Menambahkan'

@@ -9,6 +9,9 @@ use App\Models\ReportSelling;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ReportProfit;
+use App\Models\SideReportProfit;
+use App\Models\DetailReportProfit;
 
 class SellingOnlineController extends Controller
 {
@@ -46,7 +49,7 @@ class SellingOnlineController extends Controller
                 $reportSelling->save();
 
                 $reportStock                        = new ReportStock();
-                $reportStock->type                  = "selling offline";
+                $reportStock->type                  = "selling online";
                 $reportStock->transaction_number    = $invoice->number;
                 $reportStock->quantity_initial      = $product->stock;
                 $reportStock->price_initial         = $product->price;
@@ -63,6 +66,60 @@ class SellingOnlineController extends Controller
                 $product->stock -= $item->cart->quantity;
                 $product->price = $item->cart->price / $item->cart->quantity;
                 $product->save();
+
+                $reportProfit                   = ReportProfit::where('product_id', $product->id)->where('user_id', Auth::user()->id)->first();
+
+                $sideReportProfit               = new SideReportProfit();
+                $sideReportProfit->product_id   = $product->id;
+                $sideReportProfit->type         = "selling online";
+                $sideReportProfit->quantity_in  = 0;
+                $sideReportProfit->cogs_in      = 0;
+                $sideReportProfit->quantity_out = $item->cart->quantity;
+                $sideReportProfit->cogs_out     = $item->cart->price;
+                $sideReportProfit->quantity_avg = $item->cart->quantity;
+                $sideReportProfit->cogs_avg     = $item->cart->price;
+
+                if ($sideReportProfit->save()) {
+                    $getSideReportProfit = $this->getSideReportProfit($sideReportProfit->product_id, $sideReportProfit->type);
+
+                    if (count($getSideReportProfit) < 1) {
+                        $detailReportProfit                     = new DetailReportProfit();
+                        $detailReportProfit->type               = "selling online";
+                        $detailReportProfit->transaction_number = $invoice->number;
+                        $detailReportProfit->transaction_date   = $invoice->created_at;
+                        $detailReportProfit->quantity_in        = $item->cart->quantity;
+                        $detailReportProfit->cogs_in            = $item->cart->price;
+                        $detailReportProfit->quantity_out       = 0;
+                        $detailReportProfit->cogs_out           = 0;
+                        $detailReportProfit->quantity_avg       = $item->cart->quantity;
+                        $detailReportProfit->cogs_avg           = $item->cart->price;
+                        $detailReportProfit->save();
+                    } else {
+                        for ($i = 0; $i < count($getSideReportProfit); $i++) {
+                            $detailReportProfit                     = new DetailReportProfit();
+                            $detailReportProfit->type               = "selling online";
+                            $detailReportProfit->transaction_number = $invoice->number;
+                            $detailReportProfit->transaction_date   = $invoice->created_at;
+
+                            if ($i == 0) {
+                                $detailReportProfit->quantity_out       = $item->cart->quantity;
+                                $detailReportProfit->cogs_out           = $item->cart->price;
+                            } else {
+                                $detailReportProfit->quantity_out       = 0;
+                                $detailReportProfit->cogs_out           = 0;
+                            }
+
+                            $detailReportProfit->quantity_in        = 0;
+                            $detailReportProfit->cogs_in            = 0;
+
+                            $detailReportProfit->quantity_avg       = $getSideReportProfit[$i]->quantity_avg;
+                            $detailReportProfit->cogs_avg           = $getSideReportProfit[$i]->cogs_avg;
+                            $detailReportProfit->report_profit_id   = $reportProfit->id;
+
+                            $detailReportProfit->save();
+                        }
+                    }
+                }
             }
 
             return response()->json([
@@ -99,5 +156,11 @@ class SellingOnlineController extends Controller
     {
         $cogs = (($price_initial * $quantity_initial) + ($price * $quantity)) / ($quantity_initial + $quantity);
         return $cogs;
+    }
+
+    private function getSideReportProfit($product_id, $type)
+    {
+        $sideReportProfit = SideReportProfit::where('product_id', $product_id)->where('type', $type)->get();
+        return $sideReportProfit;
     }
 }

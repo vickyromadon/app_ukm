@@ -9,6 +9,9 @@ use App\Models\DetailAssembly;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ReportProfit;
+use App\Models\SideReportProfit;
+use App\Models\DetailReportProfit;
 
 class DetailAssemblyController extends Controller
 {
@@ -79,6 +82,60 @@ class DetailAssemblyController extends Controller
             $productPlus->stock += $item->quantity;
             $productPlus->price = $item->price;
             $productPlus->save();
+
+            $reportProfitPlus                       = ReportProfit::where('product_id', $productPlus->id)->where('user_id', Auth::user()->id)->first();
+
+            $sideReportProfit               = new SideReportProfit();
+            $sideReportProfit->product_id   = $productPlus->id;
+            $sideReportProfit->type         = "assembly plus";
+            $sideReportProfit->quantity_in  = $item->quantity;
+            $sideReportProfit->cogs_in      = $item->price;
+            $sideReportProfit->quantity_out = 0;
+            $sideReportProfit->cogs_out     = 0;
+            $sideReportProfit->quantity_avg = $item->quantity;
+            $sideReportProfit->cogs_avg     = $item->price;
+
+            if ($sideReportProfit->save()) {
+                $getSideReportProfit = $this->getSideReportProfit($sideReportProfit->product_id, $sideReportProfit->type);
+
+                if (count($getSideReportProfit) < 1) {
+                    $detailReportProfit                     = new DetailReportProfit();
+                    $detailReportProfit->type               = "assembly plus";
+                    $detailReportProfit->transaction_number = $assembly->number;
+                    $detailReportProfit->transaction_date   = $assembly->date;
+                    $detailReportProfit->quantity_in        = $item->quantity;
+                    $detailReportProfit->cogs_in            = $item->price;
+                    $detailReportProfit->quantity_out       = 0;
+                    $detailReportProfit->cogs_out           = 0;
+                    $detailReportProfit->quantity_avg       = $item->quantity;
+                    $detailReportProfit->cogs_avg           = $item->price;
+                    $detailReportProfit->save();
+                } else {
+                    for ($i = 0; $i < count($getSideReportProfit); $i++) {
+                        $detailReportProfit                     = new DetailReportProfit();
+                        $detailReportProfit->type               = "assembly plus";
+                        $detailReportProfit->transaction_number = $assembly->number;
+                        $detailReportProfit->transaction_date   = $assembly->date;
+
+                        if ($i == 0) {
+                            $detailReportProfit->quantity_in        = $item->quantity;
+                            $detailReportProfit->cogs_in            = $item->price;
+                        } else {
+                            $detailReportProfit->quantity_in        = 0;
+                            $detailReportProfit->cogs_in            = 0;
+                        }
+
+                        $detailReportProfit->quantity_out       = 0;
+                        $detailReportProfit->cogs_out           = 0;
+
+                        $detailReportProfit->quantity_avg       = $getSideReportProfit[$i]->quantity_avg;
+                        $detailReportProfit->cogs_avg           = $getSideReportProfit[$i]->cogs_avg;
+                        $detailReportProfit->report_profit_id   = $reportProfitPlus->id;
+
+                        $detailReportProfit->save();
+                    }
+                }
+            }
         }
 
         foreach ($assembly->product_assemblies as $item) {
@@ -101,6 +158,60 @@ class DetailAssemblyController extends Controller
 
             $productMinus->stock -= $item->quantity;
             $productMinus->save();
+
+            $reportProfitMinus                   = ReportProfit::where('product_id', $productMinus->id)->where('user_id', Auth::user()->id)->first();
+
+            $sideReportProfit               = new SideReportProfit();
+            $sideReportProfit->product_id   = $productMinus->id;
+            $sideReportProfit->type         = "assembly minus";
+            $sideReportProfit->quantity_in  = 0;
+            $sideReportProfit->cogs_in      = 0;
+            $sideReportProfit->quantity_out = $item->quantity;
+            $sideReportProfit->cogs_out     = 0;
+            $sideReportProfit->quantity_avg = $item->quantity;
+            $sideReportProfit->cogs_avg     = 0;
+
+            if ($sideReportProfit->save()) {
+                $getSideReportProfit = $this->getSideReportProfit($sideReportProfit->product_id, $sideReportProfit->type);
+
+                if (count($getSideReportProfit) < 1) {
+                    $detailReportProfit                     = new DetailReportProfit();
+                    $detailReportProfit->type               = "assembly minus";
+                    $detailReportProfit->transaction_number = $assembly->number;
+                    $detailReportProfit->transaction_date   = $assembly->date;
+                    $detailReportProfit->quantity_in        = $item->quantity;
+                    $detailReportProfit->cogs_in            = $item->price;
+                    $detailReportProfit->quantity_out       = 0;
+                    $detailReportProfit->cogs_out           = 0;
+                    $detailReportProfit->quantity_avg       = $item->quantity;
+                    $detailReportProfit->cogs_avg           = $item->price;
+                    $detailReportProfit->save();
+                } else {
+                    for ($i = 0; $i < count($getSideReportProfit); $i++) {
+                        $detailReportProfit                     = new DetailReportProfit();
+                        $detailReportProfit->type               = "assembly minus";
+                        $detailReportProfit->transaction_number = $assembly->number;
+                        $detailReportProfit->transaction_date   = $assembly->date;
+
+                        if ($i == 0) {
+                            $detailReportProfit->quantity_out       = $item->quantity;
+                            $detailReportProfit->cogs_out           = 0;
+                        } else {
+                            $detailReportProfit->quantity_out       = 0;
+                            $detailReportProfit->cogs_out           = 0;
+                        }
+
+                        $detailReportProfit->quantity_in        = 0;
+                        $detailReportProfit->cogs_in            = 0;
+
+                        $detailReportProfit->quantity_avg       = $getSideReportProfit[$i]->quantity_avg;
+                        $detailReportProfit->cogs_avg           = $getSideReportProfit[$i]->cogs_avg;
+                        $detailReportProfit->report_profit_id   = $reportProfitMinus->id;
+
+                        $detailReportProfit->save();
+                    }
+                }
+            }
         }
 
         $assembly->status = 'done';
@@ -133,5 +244,11 @@ class DetailAssemblyController extends Controller
     {
         $cogs = (($price_initial * $quantity_initial) + ($price * $quantity)) / ($quantity_initial + $quantity);
         return $cogs;
+    }
+
+    private function getSideReportProfit($product_id, $type)
+    {
+        $sideReportProfit = SideReportProfit::where('product_id', $product_id)->where('type', $type)->get();
+        return $sideReportProfit;
     }
 }

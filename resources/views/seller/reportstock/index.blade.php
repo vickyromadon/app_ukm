@@ -115,7 +115,7 @@
                         "orderable": true,
                     }
                 ],
-                "order": [ 7, 'desc' ],
+                "order": [ 11, 'asc' ],
                 "fnCreatedRow" : function(nRow, aData, iDataIndex) {
                     $(nRow).attr('data', JSON.stringify(aData));
                 }

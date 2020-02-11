@@ -71,4 +71,14 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ReportStock');
     }
+
+    public function report_profits()
+    {
+        return $this->hasMany('App\Models\ReportProfit');
+    }
+
+    public function side_report_profits()
+    {
+        return $this->hasMany('App\Models\SideReportProfit');
+    }
 }

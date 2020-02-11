@@ -10,6 +10,9 @@ use App\Models\ReportSelling;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ReportProfit;
+use App\Models\SideReportProfit;
+use App\Models\DetailReportProfit;
 
 class DetailSellingController extends Controller
 {
@@ -98,6 +101,60 @@ class DetailSellingController extends Controller
             $product->stock -= $item->quantity;
             $product->price = $item->price;
             $product->save();
+
+            $reportProfit                   = ReportProfit::where('product_id', $product->id)->where('user_id', Auth::user()->id)->first();
+
+            $sideReportProfit               = new SideReportProfit();
+            $sideReportProfit->product_id   = $product->id;
+            $sideReportProfit->type         = "selling offline";
+            $sideReportProfit->quantity_in  = 0;
+            $sideReportProfit->cogs_in      = 0;
+            $sideReportProfit->quantity_out = $item->quantity;
+            $sideReportProfit->cogs_out     = $item->price;
+            $sideReportProfit->quantity_avg = $item->quantity;
+            $sideReportProfit->cogs_avg     = $item->price;
+
+            if ($sideReportProfit->save()) {
+                $getSideReportProfit = $this->getSideReportProfit($sideReportProfit->product_id, $sideReportProfit->type);
+
+                if (count($getSideReportProfit) < 1) {
+                    $detailReportProfit                     = new DetailReportProfit();
+                    $detailReportProfit->type               = "selling offline";
+                    $detailReportProfit->transaction_number = $selling->number;
+                    $detailReportProfit->transaction_date   = $selling->date;
+                    $detailReportProfit->quantity_in        = $item->quantity;
+                    $detailReportProfit->cogs_in            = $item->price;
+                    $detailReportProfit->quantity_out       = 0;
+                    $detailReportProfit->cogs_out           = 0;
+                    $detailReportProfit->quantity_avg       = $item->quantity;
+                    $detailReportProfit->cogs_avg           = $item->price;
+                    $detailReportProfit->save();
+                } else {
+                    for ($i = 0; $i < count($getSideReportProfit); $i++) {
+                        $detailReportProfit                     = new DetailReportProfit();
+                        $detailReportProfit->type               = "selling offline";
+                        $detailReportProfit->transaction_number = $selling->number;
+                        $detailReportProfit->transaction_date   = $selling->date;
+
+                        if ($i == 0) {
+                            $detailReportProfit->quantity_out       = $item->quantity;
+                            $detailReportProfit->cogs_out           = $item->price;
+                        } else {
+                            $detailReportProfit->quantity_out       = 0;
+                            $detailReportProfit->cogs_out           = 0;
+                        }
+
+                        $detailReportProfit->quantity_in        = 0;
+                        $detailReportProfit->cogs_in            = 0;
+
+                        $detailReportProfit->quantity_avg       = $getSideReportProfit[$i]->quantity_avg;
+                        $detailReportProfit->cogs_avg           = $getSideReportProfit[$i]->cogs_avg;
+                        $detailReportProfit->report_profit_id   = $reportProfit->id;
+
+                        $detailReportProfit->save();
+                    }
+                }
+            }
         }
 
         $selling->status = 'done';
@@ -130,5 +187,11 @@ class DetailSellingController extends Controller
     {
         $cogs = (($price_initial * $quantity_initial) + ($price * $quantity)) / ($quantity_initial + $quantity);
         return $cogs;
+    }
+
+    private function getSideReportProfit($product_id, $type)
+    {
+        $sideReportProfit = SideReportProfit::where('product_id', $product_id)->where('type', $type)->get();
+        return $sideReportProfit;
     }
 }
