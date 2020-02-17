@@ -8,6 +8,7 @@ use App\Models\Cart;
 use App\Models\User;
 use App\Models\Payment;
 use App\Models\Seller;
+use App\Models\Bank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,22 +18,27 @@ class InvoiceController extends Controller
     {
         return $this->view([
             'invoice_pending'   => Invoice::where('user_id', Auth::user()->id)->where('status', "pending")->get(),
-            'invoice_payment'   => Invoice::where('user_id', Auth::user()->id)->where('status', "payment")->get(),
-            'invoice_cancel'    => Invoice::where('user_id', Auth::user()->id)->where('status', "cancel")->get(),
             'invoice_approve'   => Invoice::where('user_id', Auth::user()->id)->where('status', "approve")->get(),
+            'invoice_payment'   => Invoice::where('user_id', Auth::user()->id)->where('status', "payment")->get(),
+            'invoice_shipment'  => Invoice::where('user_id', Auth::user()->id)->where('status', "shipment")->get(),
+            'invoice_done'      => Invoice::where('user_id', Auth::user()->id)->where('status', "done")->get(),
+            'invoice_cancel'    => Invoice::where('user_id', Auth::user()->id)->where('status', "cancel")->get(),
             'invoice_reject'    => Invoice::where('user_id', Auth::user()->id)->where('status', "reject")->get(),
         ]);
     }
 
-    public function pending($id)
+    public function pagePending($id)
     {
         $invoice = Invoice::find($id);
-        $total = 0;
+        $subtotal = 0;
+        $shipping = $invoice->shipping;
 
         foreach ($invoice->invoice_carts as $item) {
-            $total += $item->cart->price;
+            $subtotal += $item->cart->price;
         }
-        $invoice->total     = $total;
+        $invoice->subtotal  = $subtotal;
+        $invoice->shipping  = $shipping;
+        $invoice->total     = $subtotal + $shipping;
         $invoice->save();
 
         return $this->view([
@@ -40,7 +46,7 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function canceled($id)
+    public function pageCancel($id)
     {
         $invoice = Invoice::find($id);
         return $this->view([
@@ -48,15 +54,16 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function approve($id)
+    public function pageApprove($id)
     {
         $invoice = Invoice::find($id);
         return $this->view([
-            'invoice'       => $invoice
+            'invoice'   => $invoice,
+            'bank'      => Bank::where('user_id', 1)->get(),
         ]);
     }
 
-    public function reject($id)
+    public function pageReject($id)
     {
         $invoice = Invoice::find($id);
         return $this->view([
@@ -65,6 +72,22 @@ class InvoiceController extends Controller
     }
 
     public function pagePayment($id)
+    {
+        $invoice = Invoice::find($id);
+        return $this->view([
+            'invoice'       => $invoice
+        ]);
+    }
+
+    public function pageShipment($id)
+    {
+        $invoice = Invoice::find($id);
+        return $this->view([
+            'invoice'       => $invoice
+        ]);
+    }
+
+    public function pageDone($id)
     {
         $invoice = Invoice::find($id);
         return $this->view([
@@ -96,6 +119,24 @@ class InvoiceController extends Controller
         }
     }
 
+    public function done(Request $request)
+    {
+        $invoice = Invoice::find($request->id);
+        $invoice->status = "done";
+
+        if (!$invoice->save()) {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Gagal Melakukan Pembatalan'
+            ]);
+        } else {
+            return response()->json([
+                'success'  => true,
+                'message'  => 'Berhasil Melakukan Pembatalan'
+            ]);
+        }
+    }
+
     public function payment(Request $request)
     {
         $invoice = Invoice::find($request->id);
@@ -111,7 +152,7 @@ class InvoiceController extends Controller
             $payment->nominal           = $invoice->total;
             $payment->user_id           = Auth::user()->id;
             $payment->invoice_id        = $invoice->id;
-            $payment->bank_id           = $invoice->seller->bank->id;
+            $payment->bank_id           = $request->bank;
             $payment->proof             = $request->file('proof')->store('payment/' . Auth::user()->id);
             $payment->save();
 
@@ -169,7 +210,7 @@ class InvoiceController extends Controller
 
     private function getInvoice($seller, $user)
     {
-        $invoice = Invoice::where('seller_id', $seller)->where('user_id', $user)->where('status', 'pending')->first();
+        $invoice = Invoice::where('seller_id', $seller)->where('user_id', $user)->where('status', 'pending')->orderBy('created_at', 'desc')->first();
         return $invoice->id;
     }
 

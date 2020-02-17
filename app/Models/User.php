@@ -108,4 +108,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\ReportProfit');
     }
+
+    public function location()
+    {
+        return $this->belongsTo('App\Models\Location');
+    }
 }

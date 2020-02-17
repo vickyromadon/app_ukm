@@ -39,6 +39,20 @@ class CartController extends Controller
 
         $product = Product::find($request->product_id);
 
+        if ($product->stock < $request->quantity) {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Persediaan Barang Tidak Mencukupi'
+            ]);
+        }
+
+        if (Auth::user()->location == null) {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Diharapkan untuk mengisi lokasi pada menu profile terlebih dahulu'
+            ]);
+        }
+
         $cart = new Cart();
         $cart->product_id   = $product->id;
         $cart->seller_id    = $product->user->seller->id;

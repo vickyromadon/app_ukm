@@ -27,6 +27,22 @@
                             <b>Email</b>
                             <p class="pull-right">{{ $data->email }}</p>
                         </li>
+                        <li class="list-group-item">
+							<b>Alamat</b>
+							<p class="pull-right">{{ $data->location != null ? $data->location->address : "-"}}</p>
+						</li>
+						<li class="list-group-item">
+							<b>Kecamatan</b>
+							<p class="pull-right">{{ $data->location != null ? $data->location->sub_district : "-"}}</p>
+						</li>
+						<li class="list-group-item">
+							<b>Kabupaten</b>
+							<p class="pull-right">{{ $data->location != null ? $data->location->district : "-"}}</p>
+						</li>
+						<li class="list-group-item">
+							<b>Provinsi</b>
+							<p class="pull-right">{{ $data->location != null ? $data->location->province : "-"}}</p>
+						</li>
                     </ul>
                 </div>
             </div>
@@ -35,7 +51,8 @@
             <div class="nav-tabs-custom">
 				<ul class="nav nav-tabs">
 					<li class="active"><a href="#settings" data-toggle="tab">Pengaturan</a></li>
-					<li><a href="#password" data-toggle="tab">Kata Sandi</a></li>
+                    <li><a href="#password" data-toggle="tab">Kata Sandi</a></li>
+					<li><a href="#location" data-toggle="tab">Lokasi</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -98,6 +115,50 @@
 						</form>
 					</div>
                     <!-- password -->
+
+                    <!-- location -->
+					<div class="tab-pane" id="location">
+						<form class="form-horizontal" method="POST" id="formLocation">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Alamat</label>
+
+								<div class="col-sm-9">
+									<textarea name="address" id="address" class="form-control" placeholder="Masukkan Alamat">{{ $data->location != null ? $data->location->address : ""}}</textarea>
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Kecamatan</label>
+
+								<div class="col-sm-9">
+                                    <input type="text" name="sub_district" id="sub_district" class="form-control" placeholder="Masukkan Kecamatan" value="{{ $data->location != null ? $data->location->sub_district : ""}}">
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Kabupaten</label>
+
+								<div class="col-sm-9">
+                                    <input type="text" name="district" id="district" class="form-control" placeholder="Masukkan Kabupaten" value="{{ $data->location != null ? $data->location->district : ""}}">
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Provinsi</label>
+
+								<div class="col-sm-9">
+                                    <input type="text" name="province" id="province" class="form-control" placeholder="Masukkan Provinsi" value="{{ $data->location != null ? $data->location->province : ""}}">
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="form-group">
+			                    <div class="col-sm-offset-3 col-sm-9">
+			                      	<button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> Simpan</button>
+			                    </div>
+		                  	</div>
+						</form>
+					</div>
+                    <!-- end setting -->
                 </div>
             </div>
         </div>
@@ -289,6 +350,104 @@
                             });
                         }
                         $('#formPassword button[type=submit]').button('reset');
+                	}
+                });
+    		});
+
+            $('#formLocation').submit(function (event) {
+    			event.preventDefault();
+    		 	$('#formLocation button[type=submit]').button('loading');
+    			$('#formLocation div.form-group').removeClass('has-error');
+    	        $('#formLocation .help-block').empty();
+
+    		 	var _data = $("#formLocation").serialize();
+
+    		 	$.ajax({
+                    url: "{{ route('profile.change-location', ['id' => $data->id]) }}",
+                    method: 'POST',
+                    data: _data,
+                    cache: false,
+
+                    success: function (response) {
+                        if ( response.success ) {
+                            $.toast({
+    	                        heading: 'Success',
+    	                        text : response.message,
+    	                        position : 'top-right',
+    	                        allowToastClose : true,
+    	                        showHideTransition : 'fade',
+    	                        icon : 'success',
+    	                        loader : false
+    	                    });
+
+    	                    setTimeout(function () {
+    	                        location.reload();
+    	                    }, 2000);
+                        }
+                        else{
+                        	$.toast({
+                                heading: 'Error',
+                                text : response.message,
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'error',
+                                loader : false,
+                                hideAfter: 5000
+                            });
+                        }
+
+                        $('#formLocation button[type=submit]').button('reset');
+                        $('#formLocation')[0].reset();
+                    },
+
+    					error: function(response){
+                    	if (response.status === 422) {
+                            // form validation errors fired up
+                            var error = response.responseJSON.errors;
+                            var data = $('#formLocation').serializeArray();
+                            $.each(data, function(key, value){
+                                if( error[data[key].name] != undefined ){
+                                    var elem;
+                                    if( $("#formLocation input[name='" + data[key].name + "']").length )
+                                        elem = $("#formLocation input[name='" + data[key].name + "']");
+                                    else if( $("#formLocation textarea[name='" + data[key].name + "']").length )
+                                        elem = $("#formLocation textarea[name='" + data[key].name + "']");
+                                    else
+                                        elem = $("#formLocation select[name='" + data[key].name + "']");
+
+                                    elem.parent().find('.help-block').text(error[data[key].name]);
+                                    elem.parent().find('.help-block').show();
+                                    elem.parent().parent().addClass('has-error');
+                                }
+                            });
+                        }
+                        else if (response.status === 400) {
+                            // Bad Client Request
+                            $.toast({
+                                heading: 'Error',
+                                text : response.responseJSON.message,
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'error',
+                                loader : false,
+                                hideAfter: 5000
+                            });
+                        }
+                        else {
+                            $.toast({
+                                heading: 'Error',
+                                text : "Whoops, looks like something went wrong.",
+                                position : 'top-right',
+                                allowToastClose : true,
+                                showHideTransition : 'fade',
+                                icon : 'error',
+                                loader : false,
+                                hideAfter: 5000
+                            });
+                        }
+                        $('#formLocation button[type=submit]').button('reset');
                 	}
                 });
     		});

@@ -2,7 +2,7 @@
 
 @section('header')
     <h1 class="mt-4 mb-3">Transaksi
-        <small>Dibatalkan</small>
+        <small>Telah Disetujui</small>
     </h1>
 
     <ol class="breadcrumb">
@@ -10,7 +10,7 @@
             <a href="{{ route('index') }}">Beranda</a>
         </li>
         <li class="breadcrumb-item">Transaksi</li>
-        <li class="breadcrumb-item active">Dibatalkan</li>
+        <li class="breadcrumb-item active">Telah Disetujui</li>
     </ol>
 @endsection
 
@@ -38,27 +38,6 @@
                             <td> : </td>
                             <td>{{ $invoice->user->name }}</td>
                         </tr>
-                    </table>
-                </div>
-                <div class="col-md-6">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th colspan="3">Dapat Melakukan Transfer ke Bank di bawah ini :</th>
-                            </tr>
-                            <tr>
-                                <th>Nama Bank</th>
-                                <th>Nomor Rekening</th>
-                                <th>Nama Pemilik</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ $invoice->seller->bank->name }}</td>
-                                <td>{{ $invoice->seller->bank->number }}</td>
-                                <td>{{ $invoice->seller->bank->owner }}</td>
-                            </tr>
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -104,17 +83,10 @@
 
     <div class="row">
         <div class="col-md-12">
-            @if ($invoice->total > 0 AND $invoice->status == "pending" )
+            @if ($invoice->total > 0 AND $invoice->status == "approve")
                 <button id="btnPayment" class="btn btn-primary pull-right">
                     <i class="fa fa-dollar"></i>
                     Bayar
-                </button>
-            @endif
-
-            @if ( $invoice->status == "pending" )
-                <button id="btnCancel" class="btn btn-danger pull-left">
-                    <i class="fa fa-close"></i>
-                    Batal
                 </button>
             @endif
         </div>
@@ -136,36 +108,15 @@
 
                     <div class="modal-body">
                         <p id="del-success">Silahkan Upload Bukti Transfer</p>
+
                         <input type="file" name="proof" id="proff" class="form-control" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
-                            Tidak
-                        </button>
-                        <button type="submit" class="btn btn-primary" data-loading-text="<i class='fa fa-spinner fa-spin'></i>">
-                            Ya
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
-    <!-- cancel -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="modalCancel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="#" method="#" id="formCancel">
-                    <input type="hidden" name="id" value="{{ $invoice->id }}">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Batalkan</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-                        <p id="del-success">Anda yakin ingin membatalkan pembayaran ?</p>
+                        <select name="bank" id="bank" class="form-control">
+                            <option value="">-- Silahkan Pilih Bank --</option>
+                            @foreach ($bank as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }} [{{ $item->number }} - {{ $item->owner }}]</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
@@ -260,85 +211,6 @@
                         }
 
                         $('#formPayment button[type=submit]').button('reset');
-                    }
-                });
-            });
-
-            // Cancel
-            $('#btnCancel').click(function () {
-                url = '{{ route("invoice.cancel") }}';
-                $('#modalCancel').modal('show');
-            });
-
-            $('#formCancel').submit(function (event) {
-                event.preventDefault();
-
-                $('#modalCancel button[type=submit]').button('loading');
-                var _data = $("#formCancel").serialize();
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: _data,
-                    dataType: 'json',
-                    cache: false,
-
-                    success: function (response) {
-                        if (response.success) {
-                            $.toast({
-                                heading: 'Success',
-                                text : response.message,
-                                position : 'top-right',
-                                allowToastClose : true,
-                                showHideTransition : 'fade',
-                                icon : 'success',
-                                loader : false
-                            });
-
-                            setTimeout(function () {
-    	                        location.reload();
-    	                    }, 1000);
-                        } else {
-                            $.toast({
-                                heading: 'Error',
-                                text : response.message,
-                                position : 'top-right',
-                                allowToastClose : true,
-                                showHideTransition : 'fade',
-                                icon : 'error',
-                                loader : false
-                            });
-                        }
-                        $('#modalCancel button[type=submit]').button('reset');
-                        $('#formCancel')[0].reset();
-                    },
-                    error: function(response){
-                        if (response.status === 400 || response.status === 422) {
-                            // Bad Client Request
-                            $.toast({
-                                heading: 'Error',
-                                text : response.responseJSON.message,
-                                position : 'top-right',
-                                allowToastClose : true,
-                                showHideTransition : 'fade',
-                                icon : 'error',
-                                loader : false,
-                                hideAfter: 5000
-                            });
-                        } else {
-                            $.toast({
-                                heading: 'Error',
-                                text : "Whoops, looks like something went wrong.",
-                                position : 'top-right',
-                                allowToastClose : true,
-                                showHideTransition : 'fade',
-                                icon : 'error',
-                                loader : false,
-                                hideAfter: 5000
-                            });
-                        }
-
-                        $('#formCancel button[type=submit]').button('reset');
                     }
                 });
             });

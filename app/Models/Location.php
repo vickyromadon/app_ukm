@@ -24,4 +24,9 @@ class Location extends Model
     {
         return $this->hasOne('App\Models\Seller');
     }
+
+    public function user()
+    {
+        return $this->hasOne('App\Models\User');
+    }
 }

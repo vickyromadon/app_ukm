@@ -2,7 +2,7 @@
 
 @section('header')
     <h1 class="mt-4 mb-3">Transaksi
-        <small>Menunggu Konfirmasi</small>
+        <small>Menunggu Pengiriman</small>
     </h1>
 
     <ol class="breadcrumb">
@@ -10,7 +10,7 @@
             <a href="{{ route('index') }}">Beranda</a>
         </li>
         <li class="breadcrumb-item">Transaksi</li>
-        <li class="breadcrumb-item active">Menunggu Konfirmasi</li>
+        <li class="breadcrumb-item active">Menunggu Pengiriman</li>
     </ol>
 @endsection
 

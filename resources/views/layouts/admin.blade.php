@@ -137,6 +137,16 @@
                             <i class="fa fa-list"></i> <span>Satuan</span>
                         </a>
                     </li>
+                    <li class="{{(Request::segment(2) == 'bank') ? "active" : ""}}">
+                        <a href="{{ route('admin.bank.index') }}">
+                            <i class="fa fa-list"></i> <span>Bank</span>
+                        </a>
+                    </li>
+                    <li class="{{(Request::segment(2) == 'payment') ? "active" : ""}}">
+                        <a href="{{ route('admin.payment.index') }}">
+                            <i class="fa fa-list"></i> <span>Pembayaran Online</span>
+                        </a>
+                    </li>
                 </ul>
                 <!-- /.sidebar-menu -->
             </section>

@@ -2,7 +2,7 @@
 
 @section('header')
     <h1 class="mt-4 mb-3">Transaksi
-        <small>Telah Disetujui</small>
+        <small>Telah Ditolak</small>
     </h1>
 
     <ol class="breadcrumb">
@@ -10,7 +10,7 @@
             <a href="{{ route('index') }}">Beranda</a>
         </li>
         <li class="breadcrumb-item">Transaksi</li>
-        <li class="breadcrumb-item active">Telah Disetujui</li>
+        <li class="breadcrumb-item active">Telah Ditolak</li>
     </ol>
 @endsection
 
@@ -39,6 +39,9 @@
                             <td>{{ $invoice->user->name }}</td>
                         </tr>
                     </table>
+                </div>
+                <div class="col-md-6">
+                    <b>Alasan Penolakan :</b> {{ $invoice->reason }}
                 </div>
             </div>
         </div>

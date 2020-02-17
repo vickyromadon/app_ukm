@@ -2,7 +2,7 @@
 
 @section('header')
     <h1 class="mt-4 mb-3">Transaksi
-        <small>Telah Ditolak</small>
+        <small>Barang Diterima</small>
     </h1>
 
     <ol class="breadcrumb">
@@ -10,7 +10,7 @@
             <a href="{{ route('index') }}">Beranda</a>
         </li>
         <li class="breadcrumb-item">Transaksi</li>
-        <li class="breadcrumb-item active">Telah Ditolak</li>
+        <li class="breadcrumb-item active">Barang Diterima</li>
     </ol>
 @endsection
 
@@ -37,6 +37,23 @@
                             <th>Pembeli</th>
                             <td> : </td>
                             <td>{{ $invoice->user->name }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table>
+                        <tr>
+                            <th colspan="3">Detail Pengiriman</th>
+                        </tr>
+                        <tr>
+                            <th>Jenis Pengiriman</th>
+                            <td> : </td>
+                            <td>{{ $invoice->receipt_type }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nomor Pengiriman</th>
+                            <td> : </td>
+                            <td>{{ $invoice->receipt_number }}</td>
                         </tr>
                     </table>
                 </div>
@@ -68,6 +85,18 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tr style="font-size:25px;">
+                                <td colspan="3">
+                                    Subtotal
+                                </td>
+                                <td>Rp. {{ number_format($invoice->subtotal) }}</td>
+                            </tr>
+                            <tr style="font-size:25px;">
+                                <td colspan="3">
+                                    Ongkos Kirim
+                                </td>
+                                <td>Rp. {{ number_format($invoice->shipping) }}</td>
+                            </tr>
                             <tr style="font-size:25px;">
                                 <td colspan="3">
                                     Total

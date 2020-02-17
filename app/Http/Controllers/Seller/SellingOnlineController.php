@@ -138,6 +138,7 @@ class SellingOnlineController extends Controller
     {
         $invoice = Invoice::find($request->id);
         $invoice->status = "reject";
+        $invoice->reason = $request->reason;
 
         if ($invoice->save()) {
             return response()->json([
@@ -152,6 +153,26 @@ class SellingOnlineController extends Controller
         }
     }
 
+    public function send(Request $request)
+    {
+        $invoice = Invoice::find($request->id);
+        $invoice->status = "shipment";
+        $invoice->receipt_type = $request->receipt_type;
+        $invoice->receipt_number = $request->receipt_number;
+
+        if ($invoice->save()) {
+            return response()->json([
+                'success'   => true,
+                'message'   => 'Berhasil Dikirim'
+            ]);
+        } else {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Gagal Dikirim'
+            ]);
+        }
+    }
+
     private function getCogsAvg($price_initial, $quantity_initial, $price, $quantity)
     {
         $cogs = (($price_initial * $quantity_initial) + ($price * $quantity)) / ($quantity_initial + $quantity);
@@ -162,5 +183,23 @@ class SellingOnlineController extends Controller
     {
         $sideReportProfit = SideReportProfit::where('product_id', $product_id)->where('type', $type)->get();
         return $sideReportProfit;
+    }
+
+    public function addShipping(Request $request) {
+        $invoice            = Invoice::find($request->id);
+        $invoice->shipping  = $request->shipping;
+        $invoice->total     = $request->shipping + $invoice->subtotal;
+
+        if ($invoice->save()) {
+            return response()->json([
+                'success'   => true,
+                'message'   => 'Berhasil Tambah Ongkos Kirim'
+            ]);
+        } else {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Gagal Tambah Ongkos Kirim'
+            ]);
+        }
     }
 }

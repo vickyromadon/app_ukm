@@ -32,25 +32,33 @@
                     </thead>
                     <tbody>
                         @foreach ($data as $item)
-                            @if ($item->status != "pending" && $item->status != "cancel")
-                                <tr>
-                                    <td>{{ $item->number }}</td>
-                                    <td>{{ $item->user->name }}</td>
-                                    <td>
-                                        @if ($item->status == 'payment')
-                                            pending
-                                        @else
-                                            {{ $item->status }}
-                                        @endif
-                                    </td>
-                                    <td>{{ $item->created_at }}</td>
-                                    <td>
-                                        <a href="{{ route('seller.selling-online.index') }}/{{ $item->id }}" class="btn btn-info btn-xs">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endif
+                            <tr>
+                                <td>{{ $item->number }}</td>
+                                <td>{{ $item->user->name }}</td>
+                                <td>
+                                    @if ($item->status == 'pending')
+                                        Menunggu Konfirmasi
+                                    @elseif ($item->status == 'approve')
+                                        Belum Bayar
+                                    @elseif ($item->status == 'payment')
+                                        Menunggu Pengiriman
+                                    @elseif ($item->status == 'shipment')
+                                        Telah Dikirim
+                                    @elseif ($item->status == 'done')
+                                        Telah Diterima
+                                    @elseif ($item->status == 'reject')
+                                        Telah Ditolak
+                                    @elseif ($item->status == 'cancel')
+                                        Telah Dibatalkan
+                                    @endif
+                                </td>
+                                <td>{{ $item->created_at }}</td>
+                                <td>
+                                    <a href="{{ route('seller.selling-online.index') }}/{{ $item->id }}" class="btn btn-info btn-xs">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
