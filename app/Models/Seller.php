@@ -44,4 +44,9 @@ class Seller extends Model
     {
         return $this->belongsTo('App\Models\Category');
     }
+
+    public function refund_danas()
+    {
+        return $this->hasMany('App\Models\RefundDana');
+    }
 }

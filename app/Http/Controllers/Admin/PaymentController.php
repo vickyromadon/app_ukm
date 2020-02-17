@@ -3,52 +3,42 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Payment;
+use App\Models\RefundDana;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->isMethod('post')) {
-            $search;
-            $start = $request->start;
-            $length = $request->length;
+        return $this->view([
+            'data' => Payment::all(),
+        ]);
+    }
 
-            if (!empty($request->search))
-                $search = $request->search['value'];
-            else
-                $search = null;
+    public function show($id)
+    {
+        return $this->view([
+            'data' => Payment::find($id)
+        ]);
+    }
 
-            $column = [
-                "",
-                "",
-                "",
-                "nominal",
-                "created_at"
-            ];
+    public function refundDana(Request $request) {
+        $refundDana = new RefundDana();
+        $refundDana->nominal = $request->nominal;
+        $refundDana->invoice_id = $request->invoice_id;
+        $refundDana->seller_id = $request->seller_id;
 
-            $total = Payment::with(['bank', 'user', 'invoice'])
-                ->where("nominal", 'LIKE', "%$search%")
-                ->count();
-
-            $data = Payment::with(['bank', 'user', 'invoice'])
-                ->where("nominal", 'LIKE', "%$search%")
-                ->orderBy($column[$request->order[0]['column'] - 1], $request->order[0]['dir'])
-                ->skip($start)
-                ->take($length)
-                ->get();
-
-            $response = [
-                'data' => $data,
-                'draw' => intval($request->draw),
-                'recordsTotal' => $total,
-                'recordsFiltered' => $total
-            ];
-
-            return response()->json($response);
+        if (!$refundDana->save()) {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Gagal Menambahkan'
+            ]);
+        } else {
+            return response()->json([
+                'success'  => true,
+                'message'  => 'Berhasil Menambahkan'
+            ]);
         }
-
-        return $this->view();
     }
 }

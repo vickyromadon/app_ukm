@@ -469,7 +469,7 @@
     </div>
 @endsection
 
-@section('js')]
+@section('js')
     <script>
         jQuery(document).ready(function($){
             var url;

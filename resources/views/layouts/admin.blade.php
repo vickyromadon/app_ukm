@@ -147,6 +147,11 @@
                             <i class="fa fa-list"></i> <span>Pembayaran Online</span>
                         </a>
                     </li>
+                    <li class="{{(Request::segment(2) == 'refund-dana') ? "active" : ""}}">
+                        <a href="{{ route('admin.refund-dana.index') }}">
+                            <i class="fa fa-list"></i> <span>Pengembalian Dana</span>
+                        </a>
+                    </li>
                 </ul>
                 <!-- /.sidebar-menu -->
             </section>

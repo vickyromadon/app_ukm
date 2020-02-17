@@ -29,4 +29,9 @@ class Invoice extends Model
     {
         return $this->hasOne('App\Models\Payment');
     }
+
+    public function refund_dana()
+    {
+        return $this->hasOne('App\Models\RefundDana');
+    }
 }

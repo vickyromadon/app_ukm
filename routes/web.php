@@ -189,6 +189,9 @@ Route::group(['middleware' => ['auth', 'seller']], function () {
         Route::resource('report-profit',                    'ReportProfitController', ['only' => [
             'show'
         ]]);
+
+        // refund-dana
+        Route::get('refund-dana',               'RefundDanaController@index')->name('refund-dana.index');
     });
 });
 
@@ -241,6 +244,13 @@ Route::prefix('admin')->namespace('Admin')->name('admin.')->group(function () {
         Route::match(['get', 'post'], 'management-member',   'ManagementMemberController@index')->name('management-member.index');
 
         // payment
-        Route::match(['get', 'post'], 'payment',   'PaymentController@index')->name('payment.index');
+        Route::get('payment',               'PaymentController@index')->name('payment.index');
+        Route::post('payment/refund-dana',  'PaymentController@refundDana')->name('payment.refund-dana');
+        Route::resource('payment',          'PaymentController', ['only' => [
+            'show',
+        ]]);
+
+        // refund-dana
+        Route::get('refund-dana',               'RefundDanaController@index')->name('refund-dana.index');
     });
 });

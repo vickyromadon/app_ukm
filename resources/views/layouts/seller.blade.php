@@ -167,6 +167,11 @@
                                 <i class="fa fa-list"></i> <span>Laporan Laba Rugi</span>
                             </a>
                         </li>
+                        <li class="{{(Request::segment(2) == 'refund-dana') ? "active" : ""}}">
+                            <a href="{{ route('seller.refund-dana.index') }}">
+                                <i class="fa fa-list"></i> <span>Laporan Pengembalian Dana</span>
+                            </a>
+                        </li>
                     @endif
                 </ul>
                 <!-- /.sidebar-menu -->
